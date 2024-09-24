@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Tell browsers not to scale the viewport automatically -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BudgetBucket HTML</title>
+    <link rel="icon" href="favicon.ico" />
+  </head>
+  <body>
+    <!-- Use header, main, and footer elements to give semantic structure -->
+    <header>
+      <h1>BudgetBucket<sup>&reg;</sup></h1>
+
+      <!-- Navigation elements -->
+      <nav>
+        <!-- Menu is a semantic alternative to <ul> that represents an interaction -->
+        <menu>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="budget.html">Budget</a></li>
+          <li><a href="payment.html">Payments</a></li>
+        </menu>
+      </nav>
+
+      <!-- Since we don't have the ability to style we use old style HTML to give some visual formatting -->
+      <hr />
+    </header>
+
+
+
+
+
+    <main>
+        <h2>Total</h2>
+        <form>
+        <div>
+          <span>$</span>
+          <input type="text" placeholder="Enter Total Cash" />
+        </div>
+        <br>
+        <div>
+            <span>Leftover: </span>
+            <input type="text" id="leftover" placeholder="Calculated Leftover" readonly />
+        </div>
+        <div>
+            <h2>Buckets</h2>
+        </div>
+
+        <div>
+            <span>Share Budget With: </span>
+            <input type="text" placeholder="user email" />
+          </div>
+          <button type="submit">Share</button>
+
+        </form>
+    </main>
+  
+
+
+
+
+
+
+    <footer>
+        <hr />
+        <span class="text-reset">Tiffany Lee</span>
+        <br />
+        <a href="https://github.com/tiffannyylee/startup">GitHub</a>
+      </footer>
+    </body>
+  </html>
+  
