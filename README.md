@@ -27,5 +27,14 @@ Ensures that budget management and expense tracking are only available to authen
 Ensures that changes in the user’s budget or expenses are reflected instantly across all active sessions.
 
 ## HTML Deliverable
+### Html Pages:
+- I created 3 different pages for my project. One for the login, one to show current sections of your budget and keep track of your total, and one to add the ability to report purchases.
+### Links:
+- I linked the login page to the buckets page, and then a button on the buckets page that says "add purchase" connects to the purchases page.
+### Text:
+- 
+### Images:
+### DB/login:
+### WebSocket:
 
 
