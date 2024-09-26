@@ -28,15 +28,20 @@ Ensures that changes in the user’s budget or expenses are reflected instantly 
 
 ## HTML Deliverable
 **Html Pages:**
-- I created 3 different pages for my project. One for the login, one to show current sections of your budget and keep track of your total, and one to add the ability to report purchases.
+  - I created 3 different pages for my project. One for the login, one to show current sections of your budget and keep track of your total, and one to add the ability to report purchases.
+    
 **Links:**
-- I linked the login page to the buckets page, and then a button on the buckets page that says "add purchase" connects to the purchases page.
+  - I linked the login page to the buckets page, and then a button on the buckets page that says "add purchase" connects to the purchases page.
+    
 **Text:**
-- The text boxes have textual descriptions like "Share Budget With" 
+  - The text boxes have textual descriptions like "Share Budget With"
+    
 **Images:**
-- I put an image of buckets with coins that can be turned into a background picture for the header later on.
+  - I put an image of buckets with coins that can be turned into a background picture for the header later on.
+    
 **DB/login:**
-- Input box and submit button for log in. The buckets have data that will be stored in a data base. Things like total, remaining, and purchases will be accessed from a database.
+  - Input box and submit button for log in. The buckets have data that will be stored in a data base. Things like total, remaining, and purchases will be accessed from a database.
+    
 **WebSocket:**
 - Sharing the budget with another user will use a websocket to keep live updates. 
 
