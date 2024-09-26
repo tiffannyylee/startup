@@ -26,3 +26,6 @@ Ensures that budget management and expense tracking are only available to authen
 - WebSocket - Provides real-time updates for expense tracking and budget adjustments.
 Ensures that changes in the user’s budget or expenses are reflected instantly across all active sessions.
 
+## HTML Deliverable
+
+
