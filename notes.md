@@ -13,3 +13,6 @@ git status shows differences between the clones and commits missed. if you have 
 
 ./deployFiles.sh -k ~/Downloads/production.pem -h tiffanycs260.click -s simon
 this is to deploy to production
+## CSS
+- everything in css is boxes. find which section you want to edit which is why html organization is important
+- https://codepen.io/leesjensen/pen/VwEPMxQ
