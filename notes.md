@@ -1,5 +1,7 @@
 notes for midterm and final
 git pull, git push, git commit will keep things updated between repos
+### personal access token
+look in notes on mac under github
 
 Getting in to my amazon instance: ssh -i ~/Downloads/production.pem ubuntu@54.204.10.112
 
