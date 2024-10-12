@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BudgetBucket HTML</title>
     <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="main.css" />
     <!-- Include bootstrap CSS framework -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
@@ -16,22 +17,21 @@
   </head>
   <body>
     <!-- Use header, main, and footer elements to give semantic structure -->
-    <header>
-      <h1>BudgetBucket<sup>&reg;</sup></h1>
-
-      <!-- Navigation elements -->
-      <nav>
-        <!-- Menu is a semantic alternative to <ul> that represents an interaction -->
-        <menu>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="budget.html">Budget</a></li>
-          <li><a href="payment.html">Payments</a></li>
+    <header class="container-fluid">
+      <nav class="navbar fixed-top navbar-dark">
+        <a class="navbar-brand" href="#">BudgetBucket<sup>&reg;</sup></a>
+        <menu class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="budget.html">Budget</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="payment.html">Payments</a>
+          </li>
         </menu>
-        <img src="images/bucket_with_money.jpg" alt="Buckets with coins" width="300" height="200" />
       </nav>
-
-      <!-- Since we don't have the ability to style we use old style HTML to give some visual formatting -->
-      <hr />
     </header>
 
 
