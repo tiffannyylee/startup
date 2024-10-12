@@ -1,0 +1,33 @@
+
+        .total-box {
+            position: relative;
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .bucket {
+            background-color: #6c757d;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .bucket-input {
+            margin-top: 10px;
+        }
+
+        /* Change color based on input value */
+        .filled {
+            background-color: #28a745; /* Green for filled */
+        }
+
+        .empty {
+            background-color: #dc3545; /* Red for empty */
+        }
