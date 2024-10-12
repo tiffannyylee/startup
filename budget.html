@@ -16,6 +16,7 @@
     />
   </head>
   <body body class="bg-dark text-light">
+
     <!-- Use header, main, and footer elements to give semantic structure -->
     <header class="container-fluid">
       <nav class="navbar fixed-top navbar-dark">
@@ -38,43 +39,50 @@
 
 
 
-    <main class="bg-secondary">
-        <h2>Total</h2>
-        <form>
-            <div>
-            <span>$</span>
-            <input type="text" placeholder="Enter Total Cash" />
-            </div>
-            <br>
-            <div>
-                <span>Leftover: </span>
-                <input type="text" id="leftover" placeholder="Calculated Leftover" readonly />
-            </div>
-            <div>
-                <h2>Buckets</h2>
-            </div>
-            <div>
-                <button type="submit">Add new bucket</button>
-            </div>
-            <br>
-        </form>
-        <form method="get" action="payment.html">
-            <button type="submit">Add Purchase</button>
-        </form>
-        <br>
-        <div>
-            <span>Share Budget With: </span>
-            <input type="text" placeholder="user email (websocket realtime)" />  <button type="submit">Share</button>
-        </div>
-          
+    <main class="bg-secondary" style="padding-top: 80px;">
+      <div class="container">
+          <h2>Total</h2>
+          <div class="total-box" id="totalBox">
+              <form id="totalForm">
+                  <span>$</span>
+                  <input type="number" placeholder="Enter Total Cash" id="totalInput" class="form-control d-inline-block w-50" />
+                  <div>
+                      <span>Leftover: </span>
+                      <input type="text" id="leftover" placeholder="Calculated Leftover" class="form-control d-inline-block w-50" readonly />
+                  </div>
+              </form>
+          </div>
 
-        
-    </main>
+          <h2>Buckets</h2>
+          <div class="bucket" id="bucket1">
+              <span>Rent</span>
+              <input type="number" class="form-control bucket-input" placeholder="Enter Amount" id="bucketInput1" />
+          </div>
+          <div class="bucket" id="bucket2">
+              <span>Groceries</span>
+              <input type="number" class="form-control bucket-input" placeholder="Enter Amount" id="bucketInput2" />
+          </div>
+          <div class="bucket" id="bucket3">
+              <span>Tuition</span>
+              <input type="number" class="form-control bucket-input" placeholder="Enter Amount" id="bucketInput3" />
+          </div>
+
+          <div>
+              <button type="button" class="btn btn-primary" onclick="addBucket()">Add new bucket</button>
+          </div>
+          <br />
+          <form method="get" action="payment.html">
+              <button type="submit" class="btn btn-success">Add Purchase</button>
+          </form>
+          <br />
+          <div>
+              <span>Share Budget With: </span>
+              <input type="text" placeholder="user email (websocket realtime)" />  
+              <button type="submit">Share</button>
+          </div>
+      </div>
+  </main>
   
-
-
-
-
 
 
     <footer>
