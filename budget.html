@@ -40,49 +40,78 @@
 
 
 
-    <main style="padding-top: 80px;">
-      <div class="container">
+    <main class="container py-5">
+      <div class="row">
+        <!-- Total Cash Section -->
+        <div class="col-md-12">
           <h2>Total</h2>
-          <div class="total-box" id="totalBox">
-              <form id="totalForm">
-                  <span>$</span>
-                  <input type="number" placeholder="Enter Total Cash" id="totalInput" class="form-control d-inline-block w-50" />
-                  <div>
-                      <span>Leftover: </span>
-                      <input type="text" id="leftover" placeholder="Calculated Leftover" class="form-control d-inline-block w-50" readonly />
-                  </div>
-              </form>
+          <div class="total-box p-4 mb-4">
+            <form id="totalForm">
+              <div class="input-group mb-3">
+                <span class="input-group-text">$</span>
+                <input type="number" id="totalInput" class="form-control" placeholder="Enter Total Cash" required />
+              </div>
+              <div>
+                <span>Leftover:</span>
+                <input type="text" id="leftover" class="form-control d-inline-block w-50" placeholder="Calculated Leftover" readonly />
+              </div>
+            </form>
           </div>
+        </div>
 
+        <div class="col-md-12">
           <h2>Buckets</h2>
-          <div class="bucket" id="bucket1">
-              <span>Rent</span>
-              <input type="number" class="form-control bucket-input" placeholder="Enter Amount" id="bucketInput1" />
-          </div>
-          <div class="bucket" id="bucket2">
-              <span>Groceries</span>
-              <input type="number" class="form-control bucket-input" placeholder="Enter Amount" id="bucketInput2" />
-          </div>
-          <div class="bucket" id="bucket3">
-              <span>Tuition</span>
-              <input type="number" class="form-control bucket-input" placeholder="Enter Amount" id="bucketInput3" />
-          </div>
+          <div class="row">
+            <div class="col-md-4 col-sm-12">
+              <div class="bucket p-4 mb-4">
+                <span>Rent</span>
+                <input type="number" class="form-control bucket-input" placeholder="Enter Amount" />
+                <!-- Progress bar for Rent bucket -->
+                <div class="progress mt-3">
+                  <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+                </div>
+              </div>
+            </div>
 
-          <div>
-              <button type="button" class="btn btn-primary" onclick="addBucket()">Add new bucket</button>
+            <div class="col-md-4 col-sm-12">
+              <div class="bucket p-4 mb-4">
+                <span>Groceries</span>
+                <input type="number" class="form-control bucket-input" placeholder="Enter Amount" />
+                <!-- Progress bar for Groceries bucket -->
+                <div class="progress mt-3">
+                  <div class="progress-bar" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">30%</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 col-sm-12">
+              <div class="bucket p-4 mb-4">
+                <span>Tuition</span>
+                <input type="number" class="form-control bucket-input" placeholder="Enter Amount" />
+                <!-- Progress bar for Tuition bucket -->
+                <div class="progress mt-3">
+                  <div class="progress-bar" role="progressbar" style="width: 80%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">80%</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <br />
-          <form method="get" action="payment.html">
-              <button type="submit" class="btn btn-success">Add Purchase</button>
+        </div>
+
+        <!-- Add Bucket and Share -->
+        <div class="col-md-12">
+          <button type="button" class="btn btn-primary mb-3">Add new bucket</button>
+          <form method="get" action="payment.html" class="d-inline-block">
+            <button type="submit" class="btn btn-success mb-3">Add Purchase</button>
           </form>
-          <br />
           <div>
-              <span>Share Budget With: </span>
-              <input type="text" placeholder="user email (websocket realtime)" />  
-              <button type="submit">Share</button>
+            <span>Share Budget With:</span>
+            <input type="email" class="form-control d-inline-block w-50" placeholder="user email" required />
+            <button type="submit" class="btn btn-info">Share</button>
           </div>
+        </div>
       </div>
-  </main>
+    </main>
+
   
 
 
