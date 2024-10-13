@@ -34,20 +34,37 @@
       </nav>
     </header>
 
-    <main>
-      <div>
-        <h1>BudgetBucket</h1>
-        <form method="get" action="budget.html">
+    <main class="container d-flex justify-content-center align-items-center vh-100">
+      <div class="w-50">
+        <h1 class="text-center">Welcome to BudgetBucket</h1>
+        <form method="get" action="budget.html" class="mt-5">
+          <!-- Email Input -->
           <div class="input-group mb-3">
             <span class="input-group-text">@</span>
-            <input class="form-control" type="text" placeholder="your@email.com" />
+            <input
+              class="form-control"
+              type="email"
+              placeholder="your@email.com"
+              required
+            />
           </div>
+
+          <!-- Password Input -->
           <div class="input-group mb-3">
             <span class="input-group-text">🔒</span>
-            <input class="form-control" type="password" placeholder="password" />
+            <input
+              class="form-control"
+              type="password"
+              placeholder="password"
+              required
+            />
           </div>
-          <button class="btn btn-primary" type="submit">Login</button>
-          <button class="btn btn-secondary" type="submit">Create</button>
+
+          <!-- Buttons -->
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Login</button>
+            <button class="btn btn-secondary" type="button">Create Account</button>
+          </div>
         </form>
       </div>
     </main>
