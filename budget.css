@@ -1,7 +1,7 @@
 
         .total-box {
             position: relative;
-            background-color: #0267b9;
+            background-color: #a9d0ef;
             color: white;
             padding: 20px;
             border-radius: 5px;
@@ -31,4 +31,12 @@
         .empty {
             background-color: #dc3545; /* Red for empty */
         }
-        
+        /* #bucket1 {
+            background-color: rgb(245, 222, 245);
+        }
+        #bucket2{
+            background-color: rgb(122, 104, 106);
+        }
+        #bucket3{
+            background-color:  #a9d0ef;
+        } */

@@ -26,7 +26,7 @@ body {
   
   footer {
     flex: 0 0 30px;
-    background-color: lightblue; /* Give the footer a background for visibility */
+    background-color: black; /* Give the footer a background for visibility */
     color: white;
     text-align: center;
     padding: 5px 0;
