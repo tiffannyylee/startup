@@ -43,6 +43,15 @@ Ensures that changes in the user’s budget or expenses are reflected instantly 
   - Input box and submit button for log in. The buckets have data that will be stored in a data base. Things like total, remaining, and purchases will be accessed from a database.
     
 **WebSocket:**
-- Sharing the budget with another user will use a websocket to keep live updates. 
+- Sharing the budget with another user will use a websocket to keep live updates.
+
+## CSS Deliverable
+For this deliverable I styled my existing html structure for a more refined final product
+- Header, footer, and main content body
+- Navigation elements - I changed the color for anchor elements.
+- Responsive to window resizing - My app looks great on all window sizes and devices
+- Application elements - Used good contrast and whitespace, added backgrounds for my different buckets
+- Application text content - Consistent fonts
+- Application images - Used images as icons for my different buckets (rent, tuition, etc.)
 
 
