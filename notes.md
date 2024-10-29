@@ -40,3 +40,14 @@ this code transforms the html into portrait mode.
 ### CSS flexbox
 - this makes it so that when you are adjusting your screen size, the different parts of the page can be viewed differently in ways that work best
 - you can also make certain parts dissapear once the screen gets to small. for example if you have a header that looks nice when the screen is big but takes up too much space when the screen is small
+
+### using npm/vite/node.js
+This may seem like a lot of work but after you do it a few times it will begin to feel natural. Just remember the main steps.
+
+Create your project directory
+Initialize it for use with NPM by running npm init -y
+Make sure .gitignore file contains node_modules
+Install any desired packages with npm install <package name here>
+Add require('<package name here>') to your application's JavaScript
+Use the code the package provides in your JavaScript
+Run your code with node index.js
