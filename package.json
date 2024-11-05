@@ -1,0 +1,24 @@
+{
+  "name": "startup",
+  "version": "1.0.0",
+  "description": "How often do you set a budget, only to forget about it after a few days? Introducing BucketBudget! Our app makes budgeting simple and engaging. With real-time updates and intuitive tracking, you can effortlessly allocate your funds, monitor your spending, and stay motivated. Say goodbye to forgotten budgets and hello to financial clarity with BucketBudget. Manage your money, stay on track, and reach your goals—all in one place. ### Design ![Screenshot 2024-09-14 at 8 15 44 PM](https://github.com/user-attachments/assets/2aed66c9-4829-418f-83d7-991762273b35) ### Key Features - Secure login over https - Ability to enter your total available funds and allocate them into customizable categories. - Easily log and categorize expenses as they occur, with instant updates to your budget - Ability to share budget with another user  ### Technologies I am going to use the required technologies in the following ways.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.4.10"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.5",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0"
+  }
+}
