@@ -21,10 +21,10 @@ export default function App() {
             <NavLink className="nav-link active" to="">Login</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="budget.html">Budget</NavLink>
+            <NavLink className="nav-link" to="/budget">Budget</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="payment.html">Payments</NavLink>
+            <NavLink className="nav-link" to="payments">Payments</NavLink>
           </li>
         </menu>
       </nav>
