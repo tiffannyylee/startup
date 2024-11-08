@@ -110,9 +110,8 @@ export function Budget() {
 
         {/* Add Bucket and Share */}
         <div className="col-md-12">
-          {/* <button type="button" className="btn btn-primary mb-3">Add new bucket</button> */}
           <form method="get" onClick={goToPayments} className="d-inline-block">
-            <button type="submit" className="btn btn-success mb-3">Add Purchase</button>
+            <button type="submit" className="btn btn-success mb-3">Record Payment</button>
           </form>
           <div>
             <span>Share Budget With:</span>
