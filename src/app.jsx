@@ -8,11 +8,11 @@ import { Payments } from './payments/payments';
 import { AuthState } from './login/authState';
 
 export default function App() {
-  const [total, setTotal] = useState(1000); // Example starting total
+  const [total, setTotal] = useState(0); // Example starting total
   const [buckets, setBuckets] = useState({
-    bucket1: 500, // Rent
-    bucket2: 300, // Groceries
-    bucket3: 200, // Tuition
+    bucket1: 0, // Rent
+    bucket2: 0, // Groceries
+    bucket3: 0, // Tuition
   });
   const [payments, setPayments] = useState([]);
   const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
@@ -58,7 +58,18 @@ export default function App() {
               />
             }
           />
-          <Route path="/budget" element={<Budget total={total} buckets={buckets} />} />
+          {/* Pass setTotal and setBuckets to Budget */}
+          <Route
+            path="/budget"
+            element={
+              <Budget 
+                total={total} 
+                setTotal={setTotal}  // Pass down setTotal
+                buckets={buckets} 
+                setBuckets={setBuckets}  // Pass down setBuckets
+              />
+            }
+          />
           <Route
             path="/payments"
             element={
