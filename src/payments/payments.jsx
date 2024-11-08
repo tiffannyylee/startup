@@ -20,10 +20,10 @@ export function Payments({ total, setTotal, buckets, setBuckets, setPayments }) 
     setTotal(total - paymentAmount);
 
     // Record the payment
-    setPayments((prevPayments) => [
-      ...prevPayments,
-      { amount: paymentAmount, bucket, date }
-    ]);
+    setPayments([
+        ...payments,
+        { amount: paymentAmount, bucket, date }
+      ]);
 
     // Clear the form fields
     setAmount('');
