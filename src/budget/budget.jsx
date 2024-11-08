@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import './budget.css';
-
+import { useNavigate } from 'react-router-dom';
 export function Budget() {
   // State for total cash and buckets
+  const navigate = useNavigate();
+
+  const goToPayments = () => {
+    navigate('/payments');
+  };
   const [total, setTotal] = useState(0);
   const [leftover, setLeftover] = useState(0);
   const [buckets, setBuckets] = useState({
@@ -106,7 +111,7 @@ export function Budget() {
         {/* Add Bucket and Share */}
         <div className="col-md-12">
           {/* <button type="button" className="btn btn-primary mb-3">Add new bucket</button> */}
-          <form method="get" action="payment.html" className="d-inline-block">
+          <form method="get" onClick={goToPayments} className="d-inline-block">
             <button type="submit" className="btn btn-success mb-3">Add Purchase</button>
           </form>
           <div>
