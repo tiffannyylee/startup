@@ -1,40 +1,26 @@
 import React from 'react';
 
-export function Login() {
+import { Unauthenticated } from './unauthenticated';
+import { Authenticated } from './authenticated';
+import { AuthState } from './authState';
+
+export function Login({ userName, authState, onAuthChange }) {
   return (
-    <main className="container d-flex justify-content-center align-items-center vh-100">
-    <div className="w-50">
-      <h1 className="text-center">Welcome to BudgetBucket</h1>
-      <form method="get" action="budget.html" class="mt-5">
-        {/* <!-- Email Input --> */}
-        <div className="input-group mb-3">
-          <span className="input-group-text">@</span>
-          <input
-            className="form-control"
-            type="email"
-            placeholder="your@email.com"
-            required
+    <main className='container-fluid bg-secondary text-center'>
+      <div>
+        {authState !== AuthState.Unknown && <h1>Welcome to BudgetBucket</h1>}
+        {authState === AuthState.Authenticated && (
+          <Authenticated userName={userName} onLogout={() => onAuthChange(userName, AuthState.Unauthenticated)} />
+        )}
+        {authState === AuthState.Unauthenticated && (
+          <Unauthenticated
+            userName={userName}
+            onLogin={(loginUserName) => {
+              onAuthChange(loginUserName, AuthState.Authenticated);
+            }}
           />
-        </div>
-
-        {/* <!-- Password Input --> */}
-        <div className="input-group mb-3">
-          <span className="input-group-text">🔒</span>
-          <input
-            className="form-control"
-            type="password"
-            placeholder="password"
-            required
-          />
-        </div>
-
-        {/* <!-- Buttons --> */}
-        <div className="d-grid gap-2">
-          <button className="btn btn-primary" type="submit">Login</button>
-          <button className="btn btn-secondary" type="button">Create Account</button>
-        </div>
-      </form>
-    </div>
-  </main>
+        )}
+      </div>
+    </main>
   );
 }

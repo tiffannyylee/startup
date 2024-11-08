@@ -5,8 +5,12 @@ import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import { Login } from './login/login';
 import { Budget } from './budget/budget';
 import { Payments } from './payments/payments';
+import { AuthState } from './login/authState';
 
 export default function App() {
+  const [userName, setUserName] = React.useState(localStorage.getItem('userName') || '');
+  const currentAuthState = userName ? AuthState.Authenticated : AuthState.Unauthenticated;
+  const [authState, setAuthState] = React.useState(currentAuthState);
   return (
   //<div className='body bg-dark text-light'>App will display here</div>
   <BrowserRouter>
@@ -18,18 +22,32 @@ export default function App() {
           </div>
         <menu className="navbar-nav">
           <li className="nav-item">
-            <NavLink className="nav-link active" to="">Login</NavLink>
+            <NavLink className="nav-link" to="">Login</NavLink>
           </li>
-          <li className="nav-item">
+          {authState === AuthState.Authenticated && (<li className="nav-item">
             <NavLink className="nav-link" to="/budget">Budget</NavLink>
-          </li>
-          <li className="nav-item">
+          </li>)}
+          {authState === AuthState.Authenticated && (<li className="nav-item">
             <NavLink className="nav-link" to="/payments">Payments</NavLink>
-          </li>
+          </li>)}
         </menu>
       </nav>
     </header>
     <Routes>
+    <Route
+    path='/'
+    element={
+      <Login
+        userName={userName}
+        authState={authState}
+        onAuthChange={(userName, authState) => {
+          setAuthState(authState);
+          setUserName(userName);
+        }}
+      />
+    }
+    exact
+  />
   <Route path='/' element={<Login />} exact />
   <Route path='/budget' element={<Budget />} />
   <Route path='/payments' element={<Payments />} />
