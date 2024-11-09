@@ -12,7 +12,7 @@ export function MockWebSocket({ onMessage }) {
         timestamp: new Date().toLocaleTimeString(),
       };
       onMessage(fakePayment);
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [onMessage]);
