@@ -54,4 +54,13 @@ For this deliverable I styled my existing html structure for a more refined fina
 - Application text content - Consistent fonts
 - Application images - Used images as icons for my different buckets (rent, tuition, etc.)
 
+## React Deliverable
+For this deliverable I implemented or mocked up the actual functionality of the app.
+- I added functionality for the log in page
+- The budget page can now take user input for the total and bucket sections
+- The payment page interacts with my budget page to subtract money from a chosen bucket when a purchase is reported
+- There is a mockup of the websocket portion where new purchases from any user on the budget will be reported in real time
+- I bundled my app using Vite
+- I included my react router and react hooks
+
 
