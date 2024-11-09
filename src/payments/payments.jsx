@@ -30,12 +30,12 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
     setPaymentSuccess(true);
     setSubmitted(true);
 
-    // Reset the state after 3 seconds
+    // Reset the state after 1 seconds
     setTimeout(() => {
       setPaymentSuccess(false);
       setAmount('');
       setSubmitted(false);
-    }, 3000);
+    }, 1500);
   };
 
   // Function to handle new WebSocket payments and update the history
