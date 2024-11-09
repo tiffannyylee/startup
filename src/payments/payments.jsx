@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MockWebSocket } from './mockWebsocket';
 
 export function Payments({ total, setTotal, buckets, setBuckets, payments, setPayments }) {
   const [amount, setAmount] = useState('');
-  const [selectedBucket, setSelectedBucket] = useState('bucket1'); // Track which bucket is selected
+  const [selectedBucket, setSelectedBucket] = useState('bucket1');
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // Track if the button has been pressed
+  const [submitted, setSubmitted] = useState(false);
+  const [paymentHistory, setPaymentHistory] = useState([]); // Stores all WebSocket payments
   const navigate = useNavigate();
 
   const handlePayment = () => {
@@ -14,11 +16,11 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
       return;
     }
 
-    // Process the payment (e.g., subtract from total and the selected bucket)
-    setTotal(total - amount); // Subtract from total
+    // Process the payment
+    setTotal(total - amount);
     setBuckets({
       ...buckets,
-      [selectedBucket]: buckets[selectedBucket] - amount, // Subtract from the selected bucket
+      [selectedBucket]: buckets[selectedBucket] - amount,
     });
 
     // Record the payment
@@ -26,14 +28,19 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
 
     // Show success message
     setPaymentSuccess(true);
-    setSubmitted(true); // Disable the button after submission
+    setSubmitted(true);
 
-    // Reset the state after 3 seconds (or adjust timing as needed)
+    // Reset the state after 3 seconds
     setTimeout(() => {
       setPaymentSuccess(false);
       setAmount('');
-      setSubmitted(false); // Re-enable the button
-    }, 3000); // 3 seconds for success message
+      setSubmitted(false);
+    }, 3000);
+  };
+
+  // Function to handle new WebSocket payments and update the history
+  const handleNewPayment = (newPayment) => {
+    setPaymentHistory((prevHistory) => [...prevHistory, newPayment]);
   };
 
   return (
@@ -51,7 +58,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="Enter Payment Amount"
-              disabled={submitted} // Disable the input after payment is submitted
+              disabled={submitted}
             />
           </div>
 
@@ -63,7 +70,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
               className="form-select"
               value={selectedBucket}
               onChange={(e) => setSelectedBucket(e.target.value)}
-              disabled={submitted} // Disable selection after payment is submitted
+              disabled={submitted}
             >
               {Object.keys(buckets).map((bucket) => (
                 <option key={bucket} value={bucket}>
@@ -77,7 +84,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
           <button
             className="btn btn-primary"
             onClick={handlePayment}
-            disabled={submitted} // Disable after submission
+            disabled={submitted}
           >
             {submitted ? 'Payment Submitted' : 'Submit Payment'}
           </button>
@@ -88,8 +95,21 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
               Payment successfully processed!
             </div>
           )}
+
+          {/* WebSocket Payment History Section */}
+          <h4 className="mt-5">WebSocket Payment History</h4>
+          <ul className="list-group">
+            {paymentHistory.map((payment, index) => (
+              <li key={index} className="list-group-item">
+                {payment.timestamp} - ${payment.amount} to {payment.bucket}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
+
+      {/* Insert Mock WebSocket */}
+      <MockWebSocket onMessage={handleNewPayment} />
     </main>
   );
 }

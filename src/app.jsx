@@ -7,6 +7,7 @@ import { Budget } from './budget/budget';
 import { Payments } from './payments/payments';
 import { AuthState } from './login/authState';
 
+
 export default function App() {
   const [total, setTotal] = useState(0); // Example starting total
   const [buckets, setBuckets] = useState({
