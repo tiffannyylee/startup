@@ -36,9 +36,9 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
   function handleClick() {
     console.log("button was clicked")
-    fetch('/api/users')
+    fetch('/api/test')
       .then((response) => response.json())
-      .then((testing)=>{console.log(testing.users)})
+      .then((testing)=>{console.log(testing.test)})
   }
 
 
