@@ -19,6 +19,11 @@ app.get('/', (_req, res) => {
   res.send({ msg: 'Server is working' });
 });
 
+apiRouter.get('/users', (_req, res) => {
+  console.log("in get users")
+  res.send(users);
+});
+
 // CreateAuth a new user
 apiRouter.post('/auth/create', async (req, res) => {
   const user = users[req.body.email];
