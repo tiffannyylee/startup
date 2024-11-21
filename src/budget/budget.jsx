@@ -43,6 +43,17 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
         setUsers(testing.users);
       });
   }
+  useEffect(() => {
+    fetch('/api/budget', {
+      headers: { Authorization: localStorage.getItem('authToken') },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTotal(data.total_cash || 0);
+        setBuckets(data.buckets || {});
+      })
+      .catch((error) => console.error('Error fetching budget:', error));
+  }, []);
 
 
   return (

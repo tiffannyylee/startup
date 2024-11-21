@@ -65,6 +65,31 @@ apiRouter.delete('/auth/logout', (req, res) => {
   res.status(204).end();
 });
 
+// get budget
+apiRouter.get('/budget', (req, res) => {
+  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+  if (!user) {
+    res.status(401).send({ msg: 'Unauthorized' });
+    return;
+  }
+
+  const budget = budgets[user.email] || { total_cash: 0, buckets: {} };
+  res.json(budget);
+});
+
+// Save or update user budget
+apiRouter.post('/budget', (req, res) => {
+  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+  if (!user) {
+    res.status(401).send({ msg: 'Unauthorized' });
+    return;
+  }
+
+  const { total_cash, buckets } = req.body;
+  budgets[user.email] = { total_cash, buckets }; // Save to in-memory store (use DB in production)
+  res.status(200).send({ msg: 'Budget saved successfully' });
+});
+
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
