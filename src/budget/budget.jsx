@@ -38,13 +38,15 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
     console.log("button was clicked")
     fetch('api/users')
       .then((response) => response.json())
-      .then((testing)=>{console.log(testing.users)})
+      .then((testing)=>{console.log(testing.users)}
+      setUsers(testing.users))
   }
 
 
   return (
     <main className="container py-5">
       <Button onClick={handleClick}>Test</Button>
+      <div>{users}</div>
       <div className="row">
         <div className="col-md-12">
           <h2>Total</h2>
