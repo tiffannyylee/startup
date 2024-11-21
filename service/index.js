@@ -27,7 +27,7 @@ apiRouter.get('/test', (_req, res) => {
   console.log("in get test")
   res.send(testData);
 });
-// GetScores
+// GetUSers
 apiRouter.get('/users', (_req, res) => {
   res.send(users);
 });

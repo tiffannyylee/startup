@@ -3,6 +3,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   server: {
-    open: false // Change to true if you want it to open automatically
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
   }
 });
