@@ -20,7 +20,7 @@ app.get('/', (_req, res) => {
 });
 
 apiRouter.get('/users', (_req, res) => {
-  console.log("in get users")
+  console.log("in get userssss")
   res.send(users);
 });
 
