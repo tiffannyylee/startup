@@ -5,6 +5,8 @@ const app = express();
 let users = {};
 
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
+app.use(express.static('public'));
+
 
 app.use(express.json());
 // Router for service endpoints
