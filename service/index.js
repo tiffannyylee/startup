@@ -15,9 +15,9 @@ app.use(express.static('public'));
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
-// app.get('/', (_req, res) => {
-//   res.send({ msg: 'Server is working' });
-// });
+app.get('/', (_req, res) => {
+  res.send({ msg: 'Server is working' });
+});
 
 // CreateAuth a new user
 apiRouter.post('/auth/create', async (req, res) => {
