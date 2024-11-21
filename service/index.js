@@ -27,6 +27,10 @@ apiRouter.get('/test', (_req, res) => {
   console.log("in get test")
   res.send(testData);
 });
+// GetScores
+apiRouter.get('/users', (_req, res) => {
+  res.send(scores);
+});
 
 // CreateAuth a new user
 apiRouter.post('/auth/create', async (req, res) => {

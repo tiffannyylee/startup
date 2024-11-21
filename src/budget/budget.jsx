@@ -11,7 +11,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
   };
 
   const [leftover, setLeftover] = useState(0);
-  const [test, SetTest] = useState('this is a test');
+  const [users, setUsers] = React.useState('this is a test');
 
   const handleTotalChange = (e) => {
     const newTotal = parseFloat(e.target.value) || 0;
@@ -36,9 +36,9 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
   function handleClick() {
     console.log("button was clicked")
-    fetch('/api/test')
+    fetch('api/users')
       .then((response) => response.json())
-      .then((testing)=>{console.log(testing.test)})
+      .then((testing)=>{console.log(testing.users)})
   }
 
 
