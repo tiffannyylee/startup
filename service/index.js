@@ -29,7 +29,7 @@ apiRouter.get('/test', (_req, res) => {
 });
 // GetScores
 apiRouter.get('/users', (_req, res) => {
-  res.send(scores);
+  res.send(users);
 });
 
 // CreateAuth a new user
