@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './budget.css';
 import { useNavigate } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 export function Budget({ total, setTotal, buckets, setBuckets }) {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
   };
 
   const [leftover, setLeftover] = useState(0);
+  const [test, SetTest] = useState('this is a test');
 
   const handleTotalChange = (e) => {
     const newTotal = parseFloat(e.target.value) || 0;
@@ -32,8 +34,17 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
     return total > 0 ? Math.min((bucketValue / total) * 100, 100) : 0;
   };
 
+  function handleClick() {
+    console.log("button was clicked")
+    fetch('/api/users')
+      .then((response) => response.json())
+      .then((testing)=>{console.log(testing.users)})
+  }
+
+
   return (
     <main className="container py-5">
+      <Button onClick={handleClick}>Test</Button>
       <div className="row">
         <div className="col-md-12">
           <h2>Total</h2>

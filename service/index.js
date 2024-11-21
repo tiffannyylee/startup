@@ -19,9 +19,10 @@ app.get('/', (_req, res) => {
   res.send({ msg: 'Server is working' });
 });
 
-apiRouter.get('/users', (_req, res) => {
-  console.log("in get userssss")
-  res.send(users);
+var testData = {test:"testdata"}
+apiRouter.get('/test', (_req, res) => {
+  console.log("in get test")
+  res.send(testData);
 });
 
 // CreateAuth a new user
