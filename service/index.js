@@ -5,10 +5,11 @@ const app = express();
 let users = {};
 
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
-app.use(express.static('public'));
+
 
 
 app.use(express.json());
+app.use(express.static('public'));
 // Router for service endpoints
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
