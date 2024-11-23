@@ -3,6 +3,7 @@ const uuid = require('uuid');
 const app = express();
 
 let users = {};
+let budgets = {};
 
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
 
@@ -73,8 +74,8 @@ apiRouter.get('/budget', (req, res) => {
     return;
   }
 
-  const budget = budgets[user.email] || { total_cash: 0, buckets: {} };
-  res.json(budget);
+  const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
+  res.status(200).send(budget);
 });
 
 // Save or update user budget
@@ -86,8 +87,19 @@ apiRouter.post('/budget', (req, res) => {
   }
 
   const { total_cash, buckets } = req.body;
-  budgets[user.email] = { total_cash, buckets }; // Save to in-memory store (use DB in production)
-  res.status(200).send({ msg: 'Budget saved successfully' });
+  if (typeof buckets !== 'object' || Array.isArray(buckets)) {
+    return res.status(400).send({ msg: 'Invalid buckets format' });
+  }
+
+  const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {} };
+  const updatedBuckets = { ...currentBudget.buckets, ...buckets };
+  budgets[user.email] = {
+    total_cash,
+    buckets: updatedBuckets,
+    
+  };
+  console.log("budget updated")
+  res.status(200).send({ msg: 'Budget updated' });
 });
 
 app.use((_req, res) => {

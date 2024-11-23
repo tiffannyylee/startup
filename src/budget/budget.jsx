@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './budget.css';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { useEffect } from 'react';
+
 
 export function Budget({ total, setTotal, buckets, setBuckets }) {
   const navigate = useNavigate();
@@ -12,17 +14,22 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
   const [leftover, setLeftover] = useState(0);
   const [users, setUsers] = React.useState('this is a test');
+  const [budget, setBudget] = React.useState('this is a test');
+
+
 
   const handleTotalChange = (e) => {
     const newTotal = parseFloat(e.target.value) || 0;
     setTotal(newTotal);
     calculateLeftover(newTotal, buckets);
+    saveBudget();
   };
 
   const handleBucketChange = (bucketName, value) => {
     const newBuckets = { ...buckets, [bucketName]: parseFloat(value) || 0 };
     setBuckets(newBuckets);
     calculateLeftover(total, newBuckets);
+    saveBudget();
   };
 
   const calculateLeftover = (total, buckets) => {
@@ -40,20 +47,54 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
       .then((response) => response.json())
       .then((testing)=>{
         console.log(testing);
+        console.log(testing.users)
         setUsers(testing.users);
       });
   }
-  useEffect(() => {
-    fetch('/api/budget', {
-      headers: { Authorization: localStorage.getItem('authToken') },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setTotal(data.total_cash || 0);
-        setBuckets(data.buckets || {});
+  React.useEffect(() => {
+    const token = localStorage.getItem('token'); // Assume authToken is stored after login
+    if (token) {
+      fetch('/api/budget', {
+        headers: { Authorization: token },
       })
-      .catch((error) => console.error('Error fetching budget:', error));
+        .then((response) => {
+          if (!response.ok) throw new Error('Failed to fetch budget');
+          return response.json();
+        })
+        .then((budget) => {
+          console.log('Fetched budget:', budget);
+        setTotal(budget.total_cash);
+
+        // Set buckets, defaulting to an empty object if invalid
+        setBuckets(budget.buckets || {});
+
+        })
+        .catch((error) => console.error('Error fetching budget:', error));
+    }
   }, []);
+
+  const saveBudget = () => {
+    const token = localStorage.getItem('token');
+    fetch('/api/budget', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify({ total_cash: total, buckets }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Failed to save budget');
+        return response.json();
+      })
+      .then(() => {
+        console.log('Budget saved successfully');
+      })
+      .catch((error) => console.error('Error saving budget:', error));
+  };
+
+
+  
 
 
   return (

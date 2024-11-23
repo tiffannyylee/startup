@@ -6,6 +6,7 @@ import { MessageDialog } from './messageDialog';
 export function Unauthenticated(props) {
   const [userName, setUserName] = React.useState(props.userName);
   const [password, setPassword] = React.useState('');
+  const [token, setToken]= React.useState('');
   const [displayError, setDisplayError] = React.useState(null);
 
   // async function loginUser() {
@@ -34,6 +35,9 @@ export function Unauthenticated(props) {
     });
     if (response?.status === 200) {
       localStorage.setItem('userName', userName);
+      const { token } = await response.json();
+      localStorage.setItem('token', token); // Store the token
+      console.log('Token saved to localStorage:', token);
       props.onLogin(userName);
     } else {
       const body = await response.json();
