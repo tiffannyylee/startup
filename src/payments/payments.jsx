@@ -23,6 +23,34 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
       [selectedBucket]: buckets[selectedBucket] - amount,
     });
 
+    const newLeftover = total - amount - Object.values(buckets).reduce((sum, val) => sum + val, 0) + buckets[selectedBucket];
+
+
+    const token = localStorage.getItem('token');
+    fetch('/api/budget', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify({
+        total_cash: total - amount,
+        buckets: {
+          ...buckets,
+          [selectedBucket]: buckets[selectedBucket] - amount,
+        },
+        leftover: newLeftover,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Failed to save budget');
+        return response.json();
+      })
+      .then(() => {
+        console.log('Budget updated successfully');
+      })
+      .catch((error) => console.error('Error saving budget:', error));
+
     // Record the payment
     setPayments([...payments, { amount, date: new Date(), bucket: selectedBucket }]);
 
