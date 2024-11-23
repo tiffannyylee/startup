@@ -13,13 +13,14 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
   };
 
   const [leftover, setLeftover] = useState(0);
-  const [users, setUsers] = React.useState('this is a test');
   const [budget, setBudget] = React.useState('this is a test');
 
 
 
   const handleTotalChange = (e) => {
     const newTotal = parseFloat(e.target.value) || 0;
+    console.log('New Total:', newTotal); // Log the value
+
     setTotal(newTotal);
     calculateLeftover(newTotal, buckets);
     saveBudget();
@@ -27,6 +28,8 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
   const handleBucketChange = (bucketName, value) => {
     const newBuckets = { ...buckets, [bucketName]: parseFloat(value) || 0 };
+    console.log('Updated Buckets:', newBuckets); // Log the updated buckets
+
     setBuckets(newBuckets);
     calculateLeftover(total, newBuckets);
     saveBudget();
@@ -41,16 +44,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
     return total > 0 ? Math.min((bucketValue / total) * 100, 100) : 0;
   };
 
-  function handleClick() {
-    console.log("button was clicked")
-    fetch('/api/users')
-      .then((response) => response.json())
-      .then((testing)=>{
-        console.log(testing);
-        console.log(testing.users)
-        setUsers(testing.users);
-      });
-  }
+
   React.useEffect(() => {
     const token = localStorage.getItem('token'); // Assume authToken is stored after login
     if (token) {
@@ -93,14 +87,14 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
       .catch((error) => console.error('Error saving budget:', error));
   };
 
-
+  useEffect(() => {
+    saveBudget();
+  }, [total, buckets]);
   
 
 
   return (
     <main className="container py-5">
-      <Button onClick={handleClick}>Test</Button>
-      <div>{users}</div>
       <div className="row">
         <div className="col-md-12">
           <h2>Total</h2>
