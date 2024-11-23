@@ -14,6 +14,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
   const [leftover, setLeftover] = useState(0);
   const [budget, setBudget] = React.useState('this is a test');
+  const [fact, setFact] = React.useState('press the button')
 
 
 
@@ -91,6 +92,20 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
   useEffect(() => {
     saveBudget();
   }, [total, buckets, leftover]);
+
+  function handleClick() {
+    console.log("button was clicked")
+    fetch('https://uselessfacts.jsph.pl/api/v2/facts/random')
+      .then((response) => response.json())
+      .then((data)=>{
+        console.log(data);
+        setFact(data.text);
+      })
+      .catch((error) => {
+        console.error('Error fetching fact:', error);
+        setFact('Oops! Unable to fetch a fact right now.');
+      });
+  }
   
 
 
@@ -133,6 +148,9 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
       <div className="mt-4">
         <button className="btn btn-primary" onClick={goToPayments}>Go to Payments</button>
       </div>
+      <div>Useless facts</div>
+        <Button onClick={handleClick}>Get a fact</Button>
+        <div>{fact}</div>
     </main>
   );
 }
