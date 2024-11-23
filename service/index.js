@@ -4,6 +4,7 @@ const app = express();
 
 let users = {};
 let budgets = {};
+let payments = {};
 
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
 
@@ -85,12 +86,10 @@ apiRouter.post('/budget', (req, res) => {
     res.status(401).send({ msg: 'Unauthorized' });
     return;
   }
-
   const { total_cash, buckets, leftover } = req.body;
   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
     return res.status(400).send({ msg: 'Invalid buckets format' });
   }
-
   const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {},leftover:0 };
   const updatedBuckets = { ...currentBudget.buckets, ...buckets };
   budgets[user.email] = {
@@ -101,6 +100,45 @@ apiRouter.post('/budget', (req, res) => {
   console.log("budget updated")
   res.status(200).send({ msg: 'Budget updated' });
 });
+//savepaymetns
+apiRouter.post('/payments', (req, res) => {
+  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+  if (!user) {
+    return res.status(401).send({ msg: 'Unauthorized' });
+  }
+
+  const { payments: newPayments } = req.body;
+
+  if (!Array.isArray(newPayments)) {
+    return res.status(400).send({ msg: 'Invalid payments format. Expected an array.' });
+  }
+
+  // Initialize user payments if not already present
+  if (!payments[user.email]) {
+    payments[user.email] = [];
+  }
+
+  // Append new payments to existing payments
+  payments[user.email] = [...payments[user.email], ...newPayments];
+
+  console.log(`Payments updated for ${user.email}:`, payments[user.email]);
+  res.status(200).send({ msg: 'Payments saved successfully.' });
+});
+//getpayments
+apiRouter.get('/payments', (req, res) => {
+  const token = req.headers.authorization;
+
+  const user = Object.values(users).find((u) => u.token === token);
+  if (!user) {
+    res.status(401).send({ msg: 'Unauthorized' });
+    return;
+  }
+
+  const userPayments = payments[user.email] || [];
+  res.status(200).send({ payments: userPayments });
+});
+
+
 
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });

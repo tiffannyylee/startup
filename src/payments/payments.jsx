@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MockWebSocket } from './mockWebsocket';
+import { useEffect } from 'react';
+
 
 export function Payments({ total, setTotal, buckets, setBuckets, payments, setPayments }) {
   const [amount, setAmount] = useState('');
@@ -51,25 +53,69 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
       })
       .catch((error) => console.error('Error saving budget:', error));
 
-    // Record the payment
-    setPayments([...payments, { amount, date: new Date(), bucket: selectedBucket }]);
-
-    // Show success message
-    setPaymentSuccess(true);
-    setSubmitted(true);
-
-    // Reset the state after 1 seconds
-    setTimeout(() => {
-      setPaymentSuccess(false);
-      setAmount('');
-      setSubmitted(false);
-    }, 1500);
-  };
+      const newPayment = { amount, date: new Date().toISOString(), bucket: selectedBucket };
+      const updatedPayments = [...payments, newPayment];
+      setPayments(updatedPayments);
+    
+      // Save payments via API
+      savePayments(updatedPayments);
+    
+      // Show success message
+      setPaymentSuccess(true);
+      setSubmitted(true);
+    
+      // Reset the state after 1.5 seconds
+      setTimeout(() => {
+        setPaymentSuccess(false);
+        setAmount('');
+        setSubmitted(false);
+      }, 1500);
+    };
 
   // Function to handle new WebSocket payments and update the history
   const handleNewPayment = (newPayment) => {
     setPaymentHistory((prevHistory) => [...prevHistory, newPayment]);
   };
+
+  //saving payments via api
+  const savePayments = (newPayments) => {
+    const token = localStorage.getItem('token');
+    fetch('/api/payments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify({ payments: newPayments }),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Failed to save payments');
+        return response.json();
+      })
+      .then(() => {
+        console.log('Payments saved successfully');
+      })
+      .catch((error) => console.error('Error saving payments:', error));
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    fetch('/api/payments', {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Failed to fetch payments');
+        return response.json();
+      })
+      .then((data) => {
+        setPayments(data.payments);
+        console.log('Fetched payments:', data.payments);
+      })
+      .catch((error) => console.error('Error fetching payments:', error));
+  }, []); // Empty dependency array ensures this runs once on mount
 
   return (
     <main className="container py-5">
@@ -123,6 +169,16 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
               Payment successfully processed!
             </div>
           )}
+
+          {/* Payment History Section */}
+          <h4 className="mt-5">Payment History</h4>
+          <ul className="list-group">
+            {payments.map((payment, index) => (
+              <li key={index} className="list-group-item">
+                {new Date(payment.date).toLocaleString()} - ${payment.amount} to {payment.bucket}
+              </li>
+            ))}
+          </ul>
 
           {/* WebSocket Payment History Section */}
           <h4 className="mt-5">WebSocket Payment History</h4>
