@@ -86,16 +86,16 @@ apiRouter.post('/budget', (req, res) => {
     return;
   }
 
-  const { total_cash, buckets } = req.body;
+  const { total_cash, buckets, leftover } = req.body;
   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
     return res.status(400).send({ msg: 'Invalid buckets format' });
   }
 
-  const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {} };
+  const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {},leftover:0 };
   const updatedBuckets = { ...currentBudget.buckets, ...buckets };
   budgets[user.email] = {
     total_cash,
-    buckets: updatedBuckets,
+    buckets: updatedBuckets, leftover
     
   };
   console.log("budget updated")

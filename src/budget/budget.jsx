@@ -61,6 +61,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
         // Set buckets, defaulting to an empty object if invalid
         setBuckets(budget.buckets || {});
+        setLeftover(budget.leftover);
 
         })
         .catch((error) => console.error('Error fetching budget:', error));
@@ -75,7 +76,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
         'Content-Type': 'application/json',
         Authorization: token,
       },
-      body: JSON.stringify({ total_cash: total, buckets }),
+      body: JSON.stringify({ total_cash: total, buckets, leftover }),
     })
       .then((response) => {
         if (!response.ok) throw new Error('Failed to save budget');
@@ -89,7 +90,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
   useEffect(() => {
     saveBudget();
-  }, [total, buckets]);
+  }, [total, buckets, leftover]);
   
 
 
