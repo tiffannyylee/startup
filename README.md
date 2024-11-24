@@ -63,4 +63,12 @@ For this deliverable I implemented or mocked up the actual functionality of the 
 - I bundled my app using Vite
 - I included my react router and react hooks
 
+## Service Deliverable
+For this deliverable I implemented the back end endpoints for logging in and out, getting and updating budgeting info, and getting and udpdating payments
+- Node.js/Express HTTP service - done!
+- Static middleware for frontend - done!
+- Calls to third party endpoints - done! (added a "Useless facts" section
+- Backend service endpoints - Placeholders for login that stores the current user on the server. Endpoints for editing buckets and payments.
+- Frontend calls service endpoints - I did this using the fetch function.
+
 
