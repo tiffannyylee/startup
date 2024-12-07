@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
 const DB = require('./serviceDatabase.js');
-const Budget = require('../models/Budget');
+const Budget = require('./models/Budget');
 
 
 let users = {};
@@ -134,148 +134,118 @@ secureApiRouter.use(async (req, res, next) => {
   }
 });
 
-apiRouter.get('/budget', async (req, res) => {
-  const authToken = req.cookies[authCookieName];
-  const user = await DB.getUserByToken(authToken);
-  if(!user){
+// apiRouter.get('/budget', async (req, res) => {
+//   const authToken = req.cookies[authCookieName];
+//   const user = await DB.getUserByToken(authToken);
+//   if(!user){
+//     res.status(401).send({ msg: 'Unauthorized' });
+//     return;
+//   }
+//   try {
+//     const budget = await budgetCollection.findOne({ email: user.email });
+//     if (!budget) {
+//       // Initialize with a default budget structure if no budget exists
+//       const defaultBudget = { email: user.email, total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 }, leftover: 0 };
+//       await budgetCollection.insertOne(defaultBudget);
+//       res.status(200).send(defaultBudget);
+//     } else {
+//       res.status(200).send(budget);
+//     }
+//   } catch (err) {
+//     res.status(500).send({ msg: 'Error retrieving budget', error: err.message });
+//   }
+
+// })
+
+// get budget
+apiRouter.get('/budget', (req, res) => {
+  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+  if (!user) {
     res.status(401).send({ msg: 'Unauthorized' });
     return;
   }
-  try {
-    const budget = await budgetCollection.findOne({ email: user.email });
-    if (!budget) {
-      // Initialize with a default budget structure if no budget exists
-      const defaultBudget = { email: user.email, total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 }, leftover: 0 };
-      await budgetCollection.insertOne(defaultBudget);
-      res.status(200).send(defaultBudget);
-    } else {
-      res.status(200).send(budget);
-    }
-  } catch (err) {
-    res.status(500).send({ msg: 'Error retrieving budget', error: err.message });
-  }
 
-})
+  const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
+  res.status(200).send(budget);
+});
 
-// // get budget
-// apiRouter.get('/budget', (req, res) => {
-//   const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+// // Save or update user budget
+// apiRouter.post('/budget', async (req, res) => {
+//   const authToken = req.cookies[authCookieName];
+//   const user = await DB.getUserByToken(authToken);
 //   if (!user) {
 //     res.status(401).send({ msg: 'Unauthorized' });
 //     return;
 //   }
 
-//   const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
-//   res.status(200).send(budget);
-// });
-// apiRouter.post('/budget', async (req, res) => {
-//   const authToken = req.cookies[authCookieName];
-//   const user = await DB.getUserByToken(authToken);
-//   if (!user){
-//     res.status(401).send({ msg: 'Unauthorized' });
-//     return;
-//   }
 //   const { total_cash, buckets, leftover } = req.body;
 //   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
 //     return res.status(400).send({ msg: 'Invalid buckets format' });
 //   }
 
 //   try {
-//     const existingBudget = await budgetCollection.findOne({ email: user.email });
+//     // Fetch the current budget from MongoDB
+//     const currentBudget = await Budget.findOne({ email: user.email });
 
-//     if (existingBudget) {
-//       // Update existing budget
-//       await budgetCollection.updateOne(
+//     const updatedBuckets = {
+//       ...(currentBudget?.buckets || {}),
+//       ...buckets,
+//     };
+
+//     if (currentBudget) {
+//       // Update the existing budget in MongoDB
+//       await Budget.updateOne(
 //         { email: user.email },
-//         { $set: { total_cash, buckets: { ...existingBudget.buckets, ...buckets }, leftover } }
+//         {
+//           $set: {
+//             total_cash,
+//             buckets: updatedBuckets,
+//             leftover
+//           }
+//         }
 //       );
 //     } else {
-//       // Insert new budget
-//       await budgetCollection.insertOne({ email: user.email, total_cash, buckets, leftover });
+//       // Insert a new budget if none exists
+//       await Budget.create({
+//         email: user.email,
+//         total_cash,
+//         buckets: updatedBuckets,
+//         leftover
+//       });
 //     }
 
-//     res.status(200).send({ msg: 'Budget updated successfully' });
-//   } catch (err) {
-//     res.status(500).send({ msg: 'Error saving budget', error: err.message });
-//   } 
-// })
+//     console.log('Budget updated');
+//     res.status(200).send({ msg: 'Budget updated' });
+//   } catch (error) {
+//     console.error('Error updating budget:', error);
+//     res.status(500).send({ msg: 'Failed to update budget' });
+//   }
+// });
+
+
+
+
 // Save or update user budget
-apiRouter.post('/budget', async (req, res) => {
-  const authToken = req.cookies[authCookieName];
-  const user = await DB.getUserByToken(authToken);
+apiRouter.post('/budget', (req, res) => {
+  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
   if (!user) {
     res.status(401).send({ msg: 'Unauthorized' });
     return;
   }
-
   const { total_cash, buckets, leftover } = req.body;
   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
     return res.status(400).send({ msg: 'Invalid buckets format' });
   }
-
-  try {
-    // Fetch the current budget from MongoDB
-    const currentBudget = await Budget.findOne({ email: user.email });
-
-    const updatedBuckets = {
-      ...(currentBudget?.buckets || {}),
-      ...buckets,
-    };
-
-    if (currentBudget) {
-      // Update the existing budget in MongoDB
-      await Budget.updateOne(
-        { email: user.email },
-        {
-          $set: {
-            total_cash,
-            buckets: updatedBuckets,
-            leftover
-          }
-        }
-      );
-    } else {
-      // Insert a new budget if none exists
-      await Budget.create({
-        email: user.email,
-        total_cash,
-        buckets: updatedBuckets,
-        leftover
-      });
-    }
-
-    console.log('Budget updated');
-    res.status(200).send({ msg: 'Budget updated' });
-  } catch (error) {
-    console.error('Error updating budget:', error);
-    res.status(500).send({ msg: 'Failed to update budget' });
-  }
-});
-
-
-
-
-// // Save or update user budget
-// apiRouter.post('/budget', (req, res) => {
-//   const user = Object.values(users).find((u) => u.token === req.headers.authorization);
-//   if (!user) {
-//     res.status(401).send({ msg: 'Unauthorized' });
-//     return;
-//   }
-//   const { total_cash, buckets, leftover } = req.body;
-//   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
-//     return res.status(400).send({ msg: 'Invalid buckets format' });
-//   }
-//   const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {},leftover:0 };
-//   const updatedBuckets = { ...currentBudget.buckets, ...buckets };
-//   budgets[user.email] = {
-//     total_cash,
-//     buckets: updatedBuckets, leftover
+  const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {},leftover:0 };
+  const updatedBuckets = { ...currentBudget.buckets, ...buckets };
+  budgets[user.email] = {
+    total_cash,
+    buckets: updatedBuckets, leftover
     
-//   };
-//   console.log("budget updated")
-//   res.status(200).send({ msg: 'Budget updated' });
-// });
+  };
+  console.log("budget updated")
+  res.status(200).send({ msg: 'Budget updated' });
+});
 
 
 //savepaymetns
