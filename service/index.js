@@ -166,11 +166,10 @@ apiRouter.get('/budget', (req, res) => {
 //   const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
 //   res.status(200).send(budget);
 // });
-
-// Save or update user budget
 apiRouter.post('/budget', (req, res) => {
-  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
-  if (!user) {
+  const authToken = req.cookies[authCookieName];
+  const user = DB.getUserByToken(authToken);
+  if (!user){
     res.status(401).send({ msg: 'Unauthorized' });
     return;
   }
@@ -178,16 +177,51 @@ apiRouter.post('/budget', (req, res) => {
   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
     return res.status(400).send({ msg: 'Invalid buckets format' });
   }
-  const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {},leftover:0 };
-  const updatedBuckets = { ...currentBudget.buckets, ...buckets };
-  budgets[user.email] = {
-    total_cash,
-    buckets: updatedBuckets, leftover
+
+  try {
+    const existingBudget =  budgetCollection.findOne({ email: user.email });
+
+    if (existingBudget) {
+      // Update existing budget
+       budgetCollection.updateOne(
+        { email: user.email },
+        { $set: { total_cash, buckets: { ...existingBudget.buckets, ...buckets }, leftover } }
+      );
+    } else {
+      // Insert new budget
+       budgetCollection.insertOne({ email: user.email, total_cash, buckets, leftover });
+    }
+
+    res.status(200).send({ msg: 'Budget updated successfully' });
+  } catch (err) {
+    res.status(500).send({ msg: 'Error saving budget', error: err.message });
+  } 
+})
+
+
+// // Save or update user budget
+// apiRouter.post('/budget', (req, res) => {
+//   const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+//   if (!user) {
+//     res.status(401).send({ msg: 'Unauthorized' });
+//     return;
+//   }
+//   const { total_cash, buckets, leftover } = req.body;
+//   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
+//     return res.status(400).send({ msg: 'Invalid buckets format' });
+//   }
+//   const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {},leftover:0 };
+//   const updatedBuckets = { ...currentBudget.buckets, ...buckets };
+//   budgets[user.email] = {
+//     total_cash,
+//     buckets: updatedBuckets, leftover
     
-  };
-  console.log("budget updated")
-  res.status(200).send({ msg: 'Budget updated' });
-});
+//   };
+//   console.log("budget updated")
+//   res.status(200).send({ msg: 'Budget updated' });
+// });
+
+
 //savepaymetns
 apiRouter.post('/payments', (req, res) => {
   const user = Object.values(users).find((u) => u.token === req.headers.authorization);
