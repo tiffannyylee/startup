@@ -206,15 +206,13 @@ apiRouter.post('/budget', (req, res) => {
 
   res.status(200).send({ msg: 'Budget updated' });
 })
-
-
-
-
 //savepaymetns
-apiRouter.post('/payments', (req, res) => {
-  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+apiRouter.post('/payments', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
   if (!user) {
-    return res.status(401).send({ msg: 'Unauthorized' });
+    res.status(401).send({ msg: 'Unauthorized' });
+    return;
   }
 
   const { payments: newPayments } = req.body;
@@ -224,16 +222,44 @@ apiRouter.post('/payments', (req, res) => {
   }
 
   // Initialize user payments if not already present
-  if (!payments[user.email]) {
-    payments[user.email] = [];
-  }
+  const updatedPayment = await DB.createOrUpdatePayment(authToken, newPayments)
 
   // Append new payments to existing payments
-  payments[user.email] = [...payments[user.email], ...newPayments];
+  //payments[user.email] = [...payments[user.email], ...newPayments];
 
-  console.log(`Payments updated for ${user.email}:`, payments[user.email]);
+  //console.log(`Payments updated for ${user.email}:`, payments[user.email]);
   res.status(200).send({ msg: 'Payments saved successfully.' });
 });
+
+
+
+// //savepaymetns
+// apiRouter.post('/payments', (req, res) => {
+//   const authToken = req.cookies[authCookieName];
+//   const user = DB.getUserByToken(authToken);
+//   if (!user) {
+//     res.status(401).send({ msg: 'Unauthorized' });
+//     return;
+//   }
+
+//   const { payments: newPayments } = req.body;
+
+//   if (!Array.isArray(newPayments)) {
+//     return res.status(400).send({ msg: 'Invalid payments format. Expected an array.' });
+//   }
+
+//   // Initialize user payments if not already present
+//   if (DB.getPaymentByToken(authToken)==null)
+//    {
+//     payments[user.email] = [];
+//   }
+
+//   // Append new payments to existing payments
+//   payments[user.email] = [...payments[user.email], ...newPayments];
+
+//   console.log(`Payments updated for ${user.email}:`, payments[user.email]);
+//   res.status(200).send({ msg: 'Payments saved successfully.' });
+// });
 //getpayments
 apiRouter.get('/payments', (req, res) => {
   const token = req.headers.authorization;

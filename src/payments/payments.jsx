@@ -79,12 +79,12 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
 
   //saving payments via api
   const savePayments = (newPayments) => {
-    const token = localStorage.getItem('token');
+    //const token = localStorage.getItem('token');
     fetch('/api/payments', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token,
       },
       body: JSON.stringify({ payments: newPayments }),
     })
@@ -99,12 +99,9 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    fetch('/api/payments', {
+    fetch('/api/budget', {
       method: 'GET',
-      headers: {
-        'Authorization': token,
-      },
+      credentials: 'include',
     })
       .then((response) => {
         if (!response.ok) throw new Error('Failed to fetch payments');

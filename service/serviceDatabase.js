@@ -91,10 +91,29 @@ async function createBudget(token, total, buckets, leftover) {
     }
     return { token, total_cash: total, buckets, leftover };
   }
-  
+
+function getPaymentByToken(token){
+    return paymentCollection.findOne({token:token})
+ }
 
 async function addPayment(payment) {
   return paymentCollection.insertOne(payment);
+}
+async function createOrUpdatePayment(token, newPayment){
+    const existingPayment = await paymentCollection.findOne({token:token});
+    if(existingPayment){
+        await paymentCollection.updateOne(
+            {token:token},
+            { $push: { payments: newPayment } }
+        );
+    }else{
+        const paymentRecord = {
+            token: token,
+            payments: [newPayment],  // Store the first payment in an array
+        };
+        await paymentCollection.insertOne(paymentRecord)
+    }
+    return {token, newPayment}
 }
 
 
@@ -104,5 +123,7 @@ module.exports = {
   createUser,
   getBudgetByToken,
   createBudget,
-  addPayment
+  addPayment,
+  getPaymentByToken,
+  createOrUpdatePayment
 };
