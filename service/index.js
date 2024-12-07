@@ -270,7 +270,7 @@ apiRouter.get('/payments', async(req, res) => {
     return;
   }
 
-  const userPayments = await DB.getPaymentByToken(authToken)
+  const userPayments = await DB.getPaymentByToken(authToken) || {payments:[]};
   res.status(200).send(userPayments);
 });
 
