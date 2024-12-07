@@ -216,8 +216,8 @@ apiRouter.post('/budget', (req, res) => {
   }
   const currentBudget = DB.getBudgetByEmail(user.email) || { total_cash: 0, buckets: {},leftover:0 };
   const updatedBuckets = { ...currentBudget.buckets, ...buckets };
-  const updatedBudget = DB.createBudget(user.email,total_cash, updatedBuckets,leftover);
-  res.status(200).send({ msg: 'Budget updated' }, updatedBudget);
+  DB.createBudget(user.email,total_cash, updatedBuckets,leftover);
+  res.status(200).send({ msg: 'Budget updated' });
 })
 
 
