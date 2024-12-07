@@ -58,6 +58,19 @@ async function createUser(email, password) {
 
   return user;
 }
+function getBudgetByEmail(email) {
+    return budgetCollection.findOne( {email: email} );
+}
+function createBudget(email, total, buckets, leftover) {
+    const budget = {
+        email :email,
+        total_cash: total,
+        buckets: buckets,
+        leftover: leftover,
+    };
+    budgetCollection.insertOne(budget);
+    return budget;
+}
 
 async function addPayment(payment) {
   return paymentCollection.insertOne(payment);
@@ -68,5 +81,7 @@ module.exports = {
   getUser,
   getUserByToken,
   createUser,
+  getBudgetByEmail,
+  createBudget,
   addPayment
 };
