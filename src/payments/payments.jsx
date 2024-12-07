@@ -54,11 +54,11 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
       .catch((error) => console.error('Error saving budget:', error));
 
       const newPayment = { amount, date: new Date().toISOString(), bucket: selectedBucket };
-      const updatedPayments = [...payments, newPayment];
+      //const updatedPayments = [...payments, newPayment];
       setPayments(updatedPayments);
     
       // Save payments via API
-      savePayments(updatedPayments);
+      savePayments(newPayment);
     
       // Show success message
       setPaymentSuccess(true);
@@ -78,16 +78,16 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
   };
 
   //saving payments via api
-  const savePayments = (newPayments) => {
+  const savePayments = (newPayment) => {
     //const token = localStorage.getItem('token');
-    const normalizedPayments = newPayments.flat(Infinity); // Flatten the structure before saving
+    //const normalizedPayments = newPayments.flat(Infinity); // Flatten the structure before saving
     fetch('/api/payments', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ payments: normalizedPayments }),
+      body: JSON.stringify({ payments: newPayment }),
     })
       .then((response) => {
         if (!response.ok) throw new Error('Failed to save payments');
