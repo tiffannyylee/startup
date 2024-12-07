@@ -132,19 +132,19 @@ secureApiRouter.use(async (req, res, next) => {
   }
 });
 
-apiRouter.get('/budget', (req, res) => {
+apiRouter.get('/budget', async (req, res) => {
   const authToken = req.cookies[authCookieName];
-  const user = DB.getUserByToken(authToken);
+  const user = await DB.getUserByToken(authToken);
   if(!user){
     res.status(401).send({ msg: 'Unauthorized' });
     return;
   }
   try {
-    const budget = budgetCollection.findOne({ email: user.email });
+    const budget = await budgetCollection.findOne({ email: user.email });
     if (!budget) {
       // Initialize with a default budget structure if no budget exists
       const defaultBudget = { email: user.email, total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 }, leftover: 0 };
-      budgetCollection.insertOne(defaultBudget);
+      await budgetCollection.insertOne(defaultBudget);
       res.status(200).send(defaultBudget);
     } else {
       res.status(200).send(budget);
@@ -166,9 +166,9 @@ apiRouter.get('/budget', (req, res) => {
 //   const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
 //   res.status(200).send(budget);
 // });
-apiRouter.post('/budget', (req, res) => {
+apiRouter.post('/budget', async (req, res) => {
   const authToken = req.cookies[authCookieName];
-  const user = DB.getUserByToken(authToken);
+  const user = await DB.getUserByToken(authToken);
   if (!user){
     res.status(401).send({ msg: 'Unauthorized' });
     return;
@@ -179,17 +179,17 @@ apiRouter.post('/budget', (req, res) => {
   }
 
   try {
-    const existingBudget =  budgetCollection.findOne({ email: user.email });
+    const existingBudget = await budgetCollection.findOne({ email: user.email });
 
     if (existingBudget) {
       // Update existing budget
-       budgetCollection.updateOne(
+      await budgetCollection.updateOne(
         { email: user.email },
         { $set: { total_cash, buckets: { ...existingBudget.buckets, ...buckets }, leftover } }
       );
     } else {
       // Insert new budget
-       budgetCollection.insertOne({ email: user.email, total_cash, buckets, leftover });
+      await budgetCollection.insertOne({ email: user.email, total_cash, buckets, leftover });
     }
 
     res.status(200).send({ msg: 'Budget updated successfully' });
