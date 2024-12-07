@@ -24,7 +24,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
     setTotal(newTotal);
     calculateLeftover(newTotal, buckets);
-    saveBudget();
+    saveBudget(newTotal, buckets);
   };
 
   const handleBucketChange = (bucketName, value) => {
@@ -33,7 +33,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
     setBuckets(newBuckets);
     calculateLeftover(total, newBuckets);
-    saveBudget();
+    saveBudget(total, newBuckets);
   };
 
   const calculateLeftover = (total, buckets) => {
@@ -47,8 +47,6 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
 
   React.useEffect(() => {
-    //const token = localStorage.getItem('token'); // Assume authToken is stored after login
-    // if (token) {
       fetch('/api/budget', {
         method: 'GET',
         credentials: 'include',
@@ -70,8 +68,7 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
     }
   , []);
 
-  const saveBudget = () => {
-    //const token = localStorage.getItem('token');
+  const saveBudget = (total, buckets) => {
     fetch('/api/budget', {
       method: 'POST',
       credentials: 'include',
@@ -90,9 +87,9 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
       .catch((error) => console.error('Error saving budget:', error));
   };
 
-  useEffect(() => {
-    saveBudget();
-  }, [total, buckets, leftover]);
+  // useEffect(() => {
+  //   saveBudget();
+  // }, [total, buckets, leftover]);
 
   function handleClick() {
     console.log("button was clicked")
