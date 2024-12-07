@@ -2,7 +2,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
-const DB = require('./database.js');
+const DB = require('./serviceDatabase.js');
 
 let users = {};
 let budgets = {};
@@ -132,17 +132,40 @@ secureApiRouter.use(async (req, res, next) => {
   }
 });
 
-// get budget
 apiRouter.get('/budget', (req, res) => {
-  const user = Object.values(users).find((u) => u.token === req.headers.authorization);
-  if (!user) {
+  const authToken = req.cookies[authCookieName];
+  const user = DB.getUserByToken(authToken);
+  if(!user){
     res.status(401).send({ msg: 'Unauthorized' });
     return;
   }
+  try {
+    const budget = budgetCollection.findOne({ email: user.email });
+    if (!budget) {
+      // Initialize with a default budget structure if no budget exists
+      const defaultBudget = { email: user.email, total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 }, leftover: 0 };
+      budgetCollection.insertOne(defaultBudget);
+      res.status(200).send(defaultBudget);
+    } else {
+      res.status(200).send(budget);
+    }
+  } catch (err) {
+    res.status(500).send({ msg: 'Error retrieving budget', error: err.message });
+  }
 
-  const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
-  res.status(200).send(budget);
-});
+})
+
+// // get budget
+// apiRouter.get('/budget', (req, res) => {
+//   const user = Object.values(users).find((u) => u.token === req.headers.authorization);
+//   if (!user) {
+//     res.status(401).send({ msg: 'Unauthorized' });
+//     return;
+//   }
+
+//   const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
+//   res.status(200).send(budget);
+// });
 
 // Save or update user budget
 apiRouter.post('/budget', (req, res) => {
