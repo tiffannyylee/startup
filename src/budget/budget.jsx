@@ -47,10 +47,11 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
 
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token'); // Assume authToken is stored after login
-    if (token) {
+    //const token = localStorage.getItem('token'); // Assume authToken is stored after login
+    // if (token) {
       fetch('/api/budget', {
-        headers: { Authorization: token },
+        method: 'GET',
+        credentials: 'include',
       })
         .then((response) => {
           if (!response.ok) throw new Error('Failed to fetch budget');
@@ -67,15 +68,15 @@ export function Budget({ total, setTotal, buckets, setBuckets }) {
         })
         .catch((error) => console.error('Error fetching budget:', error));
     }
-  }, []);
+  , []);
 
   const saveBudget = () => {
-    const token = localStorage.getItem('token');
+    //const token = localStorage.getItem('token');
     fetch('/api/budget', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token,
       },
       body: JSON.stringify({ total_cash: total, buckets, leftover }),
     })

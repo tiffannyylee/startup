@@ -58,19 +58,40 @@ async function createUser(email, password) {
 
   return user;
 }
-function getBudgetByEmail(email) {
-    return budgetCollection.findOne( {email: email} );
+function getBudgetByToken(token) {
+    return budgetCollection.findOne( {token: token} );
 }
-function createBudget(email, total, buckets, leftover) {
-    const budget = {
-        email :email,
+// function createBudget(token, total, buckets, leftover) {
+//     const budget = {
+//         token :token,
+//         total_cash: total,
+//         buckets: buckets,
+//         leftover: leftover,
+//     };
+//     budgetCollection.insertOne(budget);
+//     return budget;
+// }
+async function createBudget(token, total, buckets, leftover) {
+    const existingBudget = await budgetCollection.findOne({ token: token });
+    if (existingBudget) {
+      // Update the existing budget
+      await budgetCollection.updateOne(
+        { token: token },
+        { $set: { total_cash: total, buckets: buckets, leftover: leftover } }
+      );
+    } else {
+      // Create a new budget
+      const budget = {
+        token: token,
         total_cash: total,
         buckets: buckets,
         leftover: leftover,
-    };
-    budgetCollection.insertOne(budget);
-    return budget;
-}
+      };
+      await budgetCollection.insertOne(budget);
+    }
+    return { token, total_cash: total, buckets, leftover };
+  }
+  
 
 async function addPayment(payment) {
   return paymentCollection.insertOne(payment);
@@ -81,7 +102,7 @@ module.exports = {
   getUser,
   getUserByToken,
   createUser,
-  getBudgetByEmail,
+  getBudgetByToken,
   createBudget,
   addPayment
 };

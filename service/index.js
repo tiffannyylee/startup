@@ -126,44 +126,19 @@ apiRouter.use(secureApiRouter);
 
 secureApiRouter.use(async (req, res, next) => {
   const authToken = req.cookies[authCookieName];
+  console.log("Auth token:", authToken); // Debugging
   const user = await DB.getUserByToken(authToken);
+  console.log("User:", user); // Debugging
   if (user) {
     next();
   } else {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 });
-//DATABASE
-// apiRouter.get('/budget', async (req, res) => {
-//   const authToken = req.cookies[authCookieName];
-//   const user = await DB.getUserByToken(authToken);
-//   if(!user){
-//     res.status(401).send({ msg: 'Unauthorized' });
-//     return;
-//   }
-//   try {
-//     const budget = await budgetCollection.findOne({ email: user.email });
-//     if (!budget) {
-//       // Initialize with a default budget structure if no budget exists
-//       const defaultBudget = { email: user.email, total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 }, leftover: 0 };
-//       await budgetCollection.insertOne(defaultBudget);
-//       res.status(200).send(defaultBudget);
-//     } else {
-//       res.status(200).send(budget);
-//     }
-//   } catch (err) {
-//     res.status(500).send({ msg: 'Error retrieving budget', error: err.message });
-//   }
 
-// })
 
 // get budget
 apiRouter.get('/budget', (req, res) => {
-  // const user = Object.values(users).find((u) => u.token === req.headers.authorization);
-  // if (!user) {
-  //   res.status(401).send({ msg: 'Unauthorized' });
-  //   return;
-  // }
   const authToken = req.cookies[authCookieName];
   const user = DB.getUserByToken(authToken);
   if (!user) {
@@ -175,6 +150,18 @@ apiRouter.get('/budget', (req, res) => {
   const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
   res.status(200).send(budget);
 });
+
+// //DATABASE get budget
+// apiRouter.get('/budget', (req, res) => {
+//   const authToken = req.cookies[authCookieName];
+//   const user = DB.getUserByToken(authToken);
+//   if (!user) {
+//     res.status(401).send({ msg: 'Unauthorized' });
+//     return;
+//   }
+//   const budget = DB.getBudgetByToken(authToken) || { total_cash: 0, buckets : { bucket1: 0, bucket2: 0, bucket3: 0 },leftover:0 };
+//   res.status(200).send(budget);
+// })
 
 
 
@@ -214,9 +201,11 @@ apiRouter.post('/budget', (req, res) => {
   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
     return res.status(400).send({ msg: 'Invalid buckets format' });
   }
-  const currentBudget = DB.getBudgetByEmail(user.email) || { total_cash: 0, buckets: {},leftover:0 };
-  const updatedBuckets = { ...currentBudget.buckets, ...buckets };
-  DB.createBudget(user.email,total_cash, updatedBuckets,leftover);
+  // const currentBudget = DB.getBudgetByToken(authToken) || { total_cash: 0, buckets: {},leftover:0 };
+  // const updatedBuckets = { ...currentBudget.buckets, ...buckets };
+  //DB.createBudget(authToken,total_cash, updatedBuckets,leftover);
+  const updatedBudget = DB.createBudget(authToken, total_cash, buckets, leftover);
+
   res.status(200).send({ msg: 'Budget updated' });
 })
 
