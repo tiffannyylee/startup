@@ -96,9 +96,7 @@ function getPaymentByToken(token){
     return paymentCollection.findOne({token:token})
  }
 
-async function addPayment(payment) {
-  return paymentCollection.insertOne(payment);
-}
+
 async function createOrUpdatePayment(token, newPayment){
     if (Array.isArray(newPayment)) {
         newPayment = newPayment[newPayment.length - 1]; // Flatten the array to its first element, if applicable
@@ -126,7 +124,6 @@ module.exports = {
   createUser,
   getBudgetByToken,
   createBudget,
-  addPayment,
   getPaymentByToken,
   createOrUpdatePayment
 };

@@ -206,7 +206,7 @@ apiRouter.post('/budget', (req, res) => {
 
   res.status(200).send({ msg: 'Budget updated' });
 })
-//savepaymetns
+//DATABASE save payments
 apiRouter.post('/payments', async (req, res) => {
   const authToken = req.cookies[authCookieName];
   const user = await DB.getUserByToken(authToken);
@@ -260,19 +260,33 @@ apiRouter.post('/payments', async (req, res) => {
 //   console.log(`Payments updated for ${user.email}:`, payments[user.email]);
 //   res.status(200).send({ msg: 'Payments saved successfully.' });
 // });
-//getpayments
-apiRouter.get('/payments', (req, res) => {
-  const token = req.headers.authorization;
 
-  const user = Object.values(users).find((u) => u.token === token);
+//DATABASE get payments
+apiRouter.get('/payments', async(req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
   if (!user) {
     res.status(401).send({ msg: 'Unauthorized' });
     return;
   }
 
-  const userPayments = payments[user.email] || [];
-  res.status(200).send({ payments: userPayments });
+  const userPayments = await DB.getPaymentByToken(authToken)
+  res.status(200).send(userPayments);
 });
+
+// //getpayments
+// apiRouter.get('/payments', (req, res) => {
+//   const token = req.headers.authorization;
+
+//   const user = Object.values(users).find((u) => u.token === token);
+//   if (!user) {
+//     res.status(401).send({ msg: 'Unauthorized' });
+//     return;
+//   }
+
+//   const userPayments = payments[user.email] || [];
+//   res.status(200).send({ payments: userPayments });
+// });
 
 
 
