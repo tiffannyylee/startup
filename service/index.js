@@ -191,9 +191,9 @@ apiRouter.get('/budget', async (req, res) => {
 
 
 //DATABASE update budget
-apiRouter.post('/budget', (req, res) => {
+apiRouter.post('/budget', async (req, res) => {
   const authToken = req.cookies[authCookieName];
-  const user = DB.getUserByToken(authToken);
+  const user = await DB.getUserByToken(authToken);
   if (!user) {
     res.status(401).send({ msg: 'Unauthorized' });
     return;
@@ -202,10 +202,11 @@ apiRouter.post('/budget', (req, res) => {
   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
     return res.status(400).send({ msg: 'Invalid buckets format' });
   }
-  const updatedBudget = DB.createBudget(authToken, total_cash, buckets, leftover);
+  const updatedBudget = await DB.createBudget(authToken, total_cash, buckets, leftover);
 
   res.status(200).send({ msg: 'Budget updated' });
 })
+
 //DATABASE save payments
 apiRouter.post('/payments', async (req, res) => {
   const authToken = req.cookies[authCookieName];
