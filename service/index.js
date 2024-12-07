@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
 const DB = require('./serviceDatabase.js');
+const Budget = require('../models/Budget');
+
 
 let users = {};
 let budgets = {};
@@ -213,7 +215,7 @@ apiRouter.post('/budget', async (req, res) => {
 
   try {
     // Fetch the current budget from MongoDB
-    const currentBudget = await budgets.findOne({ email: user.email });
+    const currentBudget = await Budget.findOne({ email: user.email });
 
     const updatedBuckets = {
       ...(currentBudget?.buckets || {}),
@@ -222,7 +224,7 @@ apiRouter.post('/budget', async (req, res) => {
 
     if (currentBudget) {
       // Update the existing budget in MongoDB
-      await budgets.updateOne(
+      await Budget.updateOne(
         { email: user.email },
         {
           $set: {
@@ -234,7 +236,7 @@ apiRouter.post('/budget', async (req, res) => {
       );
     } else {
       // Insert a new budget if none exists
-      await budgets.create({
+      await Budget.create({
         email: user.email,
         total_cash,
         buckets: updatedBuckets,
