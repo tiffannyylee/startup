@@ -3,8 +3,6 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
 const DB = require('./serviceDatabase.js');
-const Budget = require('./models/Budget');
-
 
 let users = {};
 let budgets = {};
