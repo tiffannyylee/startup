@@ -137,21 +137,7 @@ secureApiRouter.use(async (req, res, next) => {
 });
 
 
-// get budget
-apiRouter.get('/budget', (req, res) => {
-  const authToken = req.cookies[authCookieName];
-  const user = DB.getUserByToken(authToken);
-  if (!user) {
-    res.status(401).send({ msg: 'Unauthorized' });
-    return;
-  }
-
-
-  const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
-  res.status(200).send(budget);
-});
-
-// //DATABASE get budget
+// // get budget
 // apiRouter.get('/budget', (req, res) => {
 //   const authToken = req.cookies[authCookieName];
 //   const user = DB.getUserByToken(authToken);
@@ -159,9 +145,24 @@ apiRouter.get('/budget', (req, res) => {
 //     res.status(401).send({ msg: 'Unauthorized' });
 //     return;
 //   }
-//   const budget = DB.getBudgetByToken(authToken) || { total_cash: 0, buckets : { bucket1: 0, bucket2: 0, bucket3: 0 },leftover:0 };
+
+
+//   const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
 //   res.status(200).send(budget);
-// })
+// });
+
+//DATABASE get budget
+apiRouter.get('/budget', async (req, res) => {
+  const authToken = req.cookies[authCookieName];
+  const user = await DB.getUserByToken(authToken);
+  if (!user) {
+    res.status(401).send({ msg: 'Unauthorized' });
+    return;
+  }
+  const budget = await DB.getBudgetByToken(authToken) || { total_cash: 0, buckets : { bucket1: 0, bucket2: 0, bucket3: 0 },leftover:0 };
+  console.log("budget:", budget)
+  res.status(200).send(budget);
+})
 
 
 
@@ -201,9 +202,6 @@ apiRouter.post('/budget', (req, res) => {
   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
     return res.status(400).send({ msg: 'Invalid buckets format' });
   }
-  // const currentBudget = DB.getBudgetByToken(authToken) || { total_cash: 0, buckets: {},leftover:0 };
-  // const updatedBuckets = { ...currentBudget.buckets, ...buckets };
-  //DB.createBudget(authToken,total_cash, updatedBuckets,leftover);
   const updatedBudget = DB.createBudget(authToken, total_cash, buckets, leftover);
 
   res.status(200).send({ msg: 'Budget updated' });
