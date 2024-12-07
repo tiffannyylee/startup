@@ -80,13 +80,14 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
   //saving payments via api
   const savePayments = (newPayments) => {
     //const token = localStorage.getItem('token');
+    const normalizedPayments = newPayments.flat(Infinity); // Flatten the structure before saving
     fetch('/api/payments', {
       method: 'POST',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ payments: newPayments }),
+      body: JSON.stringify({ payments: normalizedPayments }),
     })
       .then((response) => {
         if (!response.ok) throw new Error('Failed to save payments');

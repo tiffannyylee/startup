@@ -100,6 +100,9 @@ async function addPayment(payment) {
   return paymentCollection.insertOne(payment);
 }
 async function createOrUpdatePayment(token, newPayment){
+    if (Array.isArray(newPayment)) {
+        newPayment = newPayment[newPayment.length - 1]; // Flatten the array to its first element, if applicable
+    }
     const existingPayment = await paymentCollection.findOne({token:token});
     if(existingPayment){
         await paymentCollection.updateOne(
