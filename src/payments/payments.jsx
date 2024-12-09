@@ -100,7 +100,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
   };
 
   useEffect(() => {
-    fetch('/api/budget', {
+    fetch('/api/payments', {
       method: 'GET',
       credentials: 'include',
     })
