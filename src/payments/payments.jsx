@@ -12,7 +12,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
   const [paymentHistory, setPaymentHistory] = useState([]); // Stores all WebSocket payments
   const navigate = useNavigate();
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!amount || amount <= 0) {
       alert("Please enter a valid payment amount.");
       return;
@@ -55,10 +55,13 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
 
       const newPayment = { amount, date: new Date().toISOString(), bucket: selectedBucket };
       //const updatedPayments = [...payments, newPayment];
-      setPayments(updatedPayments);
-    
-      // Save payments via API
       savePayments(newPayment);
+      fetchPayments();
+      //setPayments(updatedPayments);
+      setPayments((prevPayments) => [...prevPayments, newPayment]);
+
+      //get recent payments
+      fetchPayments();
     
       // Show success message
       setPaymentSuccess(true);
@@ -75,28 +78,49 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
   // Function to handle new WebSocket payments and update the history
   const handleNewPayment = (newPayment) => {
     setPaymentHistory((prevHistory) => [...prevHistory, newPayment]);
+    //fetchPayments();
   };
+
+  const fetchPayments = () => {
+    fetch('/api/payments', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error('Failed to fetch payments');
+        return response.json();
+      })
+      .then((data) => {
+        setPayments(data.payments);
+        console.log('Fetched payments:', data.payments);
+      })
+      .catch((error) => console.error('Error fetching payments:', error));
+  };
+  
 
   //saving payments via api
   const savePayments = (newPayment) => {
     //const token = localStorage.getItem('token');
     //const normalizedPayments = newPayments.flat(Infinity); // Flatten the structure before saving
-    fetch('/api/payments', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ payments: newPayment }),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error('Failed to save payments');
-        return response.json();
+    return new Promise((resolve,reject) => {
+      fetch('/api/payments', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ payments: newPayment }),
       })
-      .then(() => {
-        console.log('Payments saved successfully');
-      })
-      .catch((error) => console.error('Error saving payments:', error));
+        .then((response) => {
+          if (!response.ok) throw new Error('Failed to save payments');
+          return response.json();
+        })
+        .then(() => {
+          console.log('Payments saved successfully');
+        })
+        .catch((error) => console.error('Error saving payments:', error));
+    });
+
   };
 
   useEffect(() => {

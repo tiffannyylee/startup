@@ -216,9 +216,9 @@ apiRouter.post('/payments', async (req, res) => {
 
   const { payments: newPayments } = req.body;
 
-  if (!Array.isArray(newPayments)) {
-    return res.status(400).send({ msg: 'Invalid payments format. Expected an array.' });
-  }
+  // if (!Array.isArray(newPayments)) {
+  //   return res.status(400).send({ msg: 'Invalid payments format. Expected an array.' });
+  // }
 
   // Initialize user payments if not already present
   const updatedPayment = await DB.createOrUpdatePayment(authToken, newPayments)
