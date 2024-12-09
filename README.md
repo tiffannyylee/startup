@@ -71,4 +71,11 @@ For this deliverable I implemented the back end endpoints for logging in and out
 - Backend service endpoints - Placeholders for login that stores the current user on the server. Endpoints for editing buckets and payments.
 - Frontend calls service endpoints - I did this using the fetch function.
 
+## Login/database Deliverable
+For this section I implemented my mongodb database so that things were stored persistently.
+- Stores new users - done!
+- Allows registration - done!
+- Restricts activity if not registered - done!
+- Simon login deployed - done!
+- Stores budgeting and payment info - done!
 
