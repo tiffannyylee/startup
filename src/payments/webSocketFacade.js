@@ -1,4 +1,18 @@
-class BudgetEventNotifier {
+const BudgetEvent = {
+    System: 'system',          // Connection-related events
+    Payment: 'payment',        // For sending payment information
+    Update: 'budgetUpdate',    // For budget updates
+  };
+  class EventMessage {
+    constructor(from, type, value) {
+      this.from = from;       // Who sent the message
+      this.type = type;       // Type of event (payment, update, etc.)
+      this.value = value;     // Payment data or other details
+    }
+  }
+    
+
+  class PaymentNotifier {
     events = [];
     handlers = [];
   
@@ -7,31 +21,26 @@ class BudgetEventNotifier {
       const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
       this.socket = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
   
-      this.socket.onopen = (event) => {
-        this.receiveEvent(new EventMessage('System', BudgetEvent.System, { msg: 'connected' }));
+      this.socket.onopen = () => {
+        console.log('WebSocket connected');
       };
   
-      this.socket.onclose = (event) => {
-        this.receiveEvent(new EventMessage('System', BudgetEvent.System, { msg: 'disconnected' }));
+      this.socket.onclose = () => {
+        console.log('WebSocket disconnected');
       };
   
-      this.socket.onmessage = async (msg) => {
+      this.socket.onmessage = (msg) => {
         try {
-          const event = JSON.parse(await msg.data.text());
+          const event = JSON.parse(msg.data);
           this.receiveEvent(event);
-        } catch {
-          console.error('Failed to parse incoming message.');
+        } catch (error) {
+          console.error('Error parsing WebSocket message:', error);
         }
       };
     }
   
-    broadcastPayment(from, paymentDetails) {
-      const event = new EventMessage(from, BudgetEvent.Payment, paymentDetails);
-      this.socket.send(JSON.stringify(event));
-    }
-  
-    broadcastBudgetUpdate(from, budgetData) {
-      const event = new EventMessage(from, BudgetEvent.Update, budgetData);
+    broadcastPayment(payment) {
+      const event = { type: 'payment', payload: payment };
       this.socket.send(JSON.stringify(event));
     }
   
@@ -46,11 +55,12 @@ class BudgetEventNotifier {
     receiveEvent(event) {
       this.events.push(event);
   
-      this.events.forEach((e) => {
-        this.handlers.forEach((handler) => {
-          handler(e);
-        });
+      this.handlers.forEach((handler) => {
+        handler(event);
       });
     }
   }
+  
+  const PaymentNotifierInstance = new PaymentNotifier();
+  export default PaymentNotifierInstance;
   

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MockWebSocket } from './mockWebsocket';
 import { useEffect } from 'react';
+import PaymentNotifierInstance from './PaymentNotifier'; // Import the notifier
+
 
 
 export function Payments({ total, setTotal, buckets, setBuckets, payments, setPayments }) {
@@ -19,6 +21,8 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
     }
 
     // Process the payment
+    //const newPayment = { amount, date: new Date().toISOString(), bucket: selectedBucket };
+
     setTotal(total - amount);
     setBuckets({
       ...buckets,
@@ -73,13 +77,24 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
         setAmount('');
         setSubmitted(false);
       }, 1500);
+      //PaymentNotifierInstance.broadcastPayment(newPayment);
     };
 
   // Function to handle new WebSocket payments and update the history
-  const handleNewPayment = (newPayment) => {
-    setPaymentHistory((prevHistory) => [...prevHistory, newPayment]);
-    //fetchPayments();
+  const handleNewPayment = (event) => {
+    if (event.type === 'payment') {
+      setPaymentHistory((prevHistory) => [...prevHistory, event.payload]);
+    }
   };
+  useEffect(() => {
+    // Register WebSocket handler
+    PaymentNotifierInstance.addHandler(handleNewPayment);
+
+    return () => {
+      // Cleanup handler on component unmount
+      PaymentNotifierInstance.removeHandler(handleNewPayment);
+    };
+  }, []);
 
   const fetchPayments = () => {
     fetch('/api/payments', {
@@ -215,7 +230,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
       </div>
 
       {/* Insert Mock WebSocket */}
-      <MockWebSocket onMessage={handleNewPayment} />
+      {/* <MockWebSocket onMessage={handleNewPayment} /> */}
     </main>
   );
 }
