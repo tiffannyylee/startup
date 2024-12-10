@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const app = express();
 const DB = require('./serviceDatabase.js');
+const { peerProxy } = require('./webSocket.js');
 
 let users = {};
 let budgets = {};
@@ -55,18 +56,6 @@ apiRouter.post('/auth/login', async (req, res) => {
   res.status(401).send({ msg: 'Unauthorized' });
 });
 
-// // GetAuth login an existing user
-// apiRouter.post('/auth/login', async (req, res) => {
-//   const user = users[req.body.email];
-//   if (user) {
-//     if (req.body.password === user.password) {
-//       user.token = uuid.v4();
-//       res.send({ token: user.token });
-//       return;
-//     }
-//   }
-//   res.status(401).send({ msg: 'Unauthorized' });
-// });
 
 // GetUSers
 apiRouter.get('/users', (_req, res) => {
@@ -89,18 +78,6 @@ apiRouter.post('/auth/create', async (req, res) => {
   }
 });
 
-// // CreateAuth a new user
-// apiRouter.post('/auth/create', async (req, res) => {
-//   const user = users[req.body.email];
-//   if (user) {
-//     res.status(409).send({ msg: 'Existing user' });
-//   } else {
-//     const newUser = { email: req.body.email, password: req.body.password, token: uuid.v4() };
-//     users[newUser.email] = newUser;
-
-//     res.send({ token: newUser.token });
-//   }
-// });
 
 
 // DeleteAuth token if stored in cookie
@@ -109,14 +86,6 @@ apiRouter.delete('/auth/logout', (_req, res) => {
   res.status(204).end();
 });
 
-// // DeleteAuth logout a user
-// apiRouter.delete('/auth/logout', (req, res) => {
-//   const user = Object.values(users).find((u) => u.token === req.body.token);
-//   if (user) {
-//     delete user.token;
-//   }
-//   res.status(204).end();
-// });
 
 // secureApiRouter verifies credentials for endpoints
 const secureApiRouter = express.Router();
@@ -135,19 +104,6 @@ secureApiRouter.use(async (req, res, next) => {
 });
 
 
-// // get budget
-// apiRouter.get('/budget', (req, res) => {
-//   const authToken = req.cookies[authCookieName];
-//   const user = DB.getUserByToken(authToken);
-//   if (!user) {
-//     res.status(401).send({ msg: 'Unauthorized' });
-//     return;
-//   }
-
-
-//   const budget = budgets[user.email] || { total_cash: 0, buckets: { bucket1: 0, bucket2: 0, bucket3: 0 } };
-//   res.status(200).send(budget);
-// });
 
 //DATABASE get budget
 apiRouter.get('/budget', async (req, res) => {
@@ -162,30 +118,6 @@ apiRouter.get('/budget', async (req, res) => {
   res.status(200).send(budget);
 })
 
-
-
-// //Save or update user budget
-// apiRouter.post('/budget', (req, res) => {
-//   const authToken = req.cookies[authCookieName];
-//   const user = DB.getUserByToken(authToken);
-//   if (!user) {
-//     res.status(401).send({ msg: 'Unauthorized' });
-//     return;
-//   }
-//   const { total_cash, buckets, leftover } = req.body;
-//   if (typeof buckets !== 'object' || Array.isArray(buckets)) {
-//     return res.status(400).send({ msg: 'Invalid buckets format' });
-//   }
-//   const currentBudget = budgets[user.email] || { total_cash: 0, buckets: {},leftover:0 };
-//   const updatedBuckets = { ...currentBudget.buckets, ...buckets };
-//   budgets[user.email] = {
-//     total_cash,
-//     buckets: updatedBuckets, leftover
-    
-//   };
-//   console.log("budget updated")
-//   res.status(200).send({ msg: 'Budget updated' });
-// });
 
 
 //DATABASE update budget
@@ -216,49 +148,13 @@ apiRouter.post('/payments', async (req, res) => {
 
   const { payments: newPayments } = req.body;
 
-  // if (!Array.isArray(newPayments)) {
-  //   return res.status(400).send({ msg: 'Invalid payments format. Expected an array.' });
-  // }
-
   // Initialize user payments if not already present
   const updatedPayment = await DB.createOrUpdatePayment(authToken, newPayments)
 
-  // Append new payments to existing payments
-  //payments[user.email] = [...payments[user.email], ...newPayments];
 
-  //console.log(`Payments updated for ${user.email}:`, payments[user.email]);
   res.status(200).send({ msg: 'Payments saved successfully.' });
 });
 
-
-
-// //savepaymetns
-// apiRouter.post('/payments', (req, res) => {
-//   const authToken = req.cookies[authCookieName];
-//   const user = DB.getUserByToken(authToken);
-//   if (!user) {
-//     res.status(401).send({ msg: 'Unauthorized' });
-//     return;
-//   }
-
-//   const { payments: newPayments } = req.body;
-
-//   if (!Array.isArray(newPayments)) {
-//     return res.status(400).send({ msg: 'Invalid payments format. Expected an array.' });
-//   }
-
-//   // Initialize user payments if not already present
-//   if (DB.getPaymentByToken(authToken)==null)
-//    {
-//     payments[user.email] = [];
-//   }
-
-//   // Append new payments to existing payments
-//   payments[user.email] = [...payments[user.email], ...newPayments];
-
-//   console.log(`Payments updated for ${user.email}:`, payments[user.email]);
-//   res.status(200).send({ msg: 'Payments saved successfully.' });
-// });
 
 //DATABASE get payments
 apiRouter.get('/payments', async(req, res) => {
@@ -272,21 +168,6 @@ apiRouter.get('/payments', async(req, res) => {
   const userPayments = await DB.getPaymentByToken(authToken) || {payments:[]};
   res.status(200).send(userPayments);
 });
-
-// //getpayments
-// apiRouter.get('/payments', (req, res) => {
-//   const token = req.headers.authorization;
-
-//   const user = Object.values(users).find((u) => u.token === token);
-//   if (!user) {
-//     res.status(401).send({ msg: 'Unauthorized' });
-//     return;
-//   }
-
-//   const userPayments = payments[user.email] || [];
-//   res.status(200).send({ payments: userPayments });
-// });
-
 
 
 // Default error handler
@@ -311,3 +192,5 @@ function setAuthCookie(res, authToken) {
 const httpService = app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+peerProxy(httpService)
