@@ -117,7 +117,6 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
   //saving payments via api
   const savePayments = (newPayment) => {
     //const token = localStorage.getItem('token');
-    //const normalizedPayments = newPayments.flat(Infinity); // Flatten the structure before saving
     return new Promise((resolve,reject) => {
       fetch('/api/payments', {
         method: 'POST',
@@ -218,20 +217,17 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
             ))}
           </ul>
 
-          {/* WebSocket Payment History Section */}
-          <h4 className="mt-5">WebSocket Payment History</h4>
+          {/* WebSocket Payment History Section
+          <h4 className="mt-5">WebSocket Messages</h4>
           <ul className="list-group">
             {paymentHistory.map((payment, index) => (
               <li key={index} className="list-group-item">
                 {payment.timestamp} - ${payment.amount} to {payment.bucket}
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       </div>
-
-      {/* Insert Mock WebSocket */}
-      {/* <MockWebSocket onMessage={handleNewPayment} /> */}
     </main>
   );
 }
