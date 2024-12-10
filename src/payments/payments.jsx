@@ -59,6 +59,8 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
 
       const newPayment = { amount, date: new Date().toISOString(), bucket: selectedBucket };
       //const updatedPayments = [...payments, newPayment];
+      PaymentNotifierInstance.broadcastPayment(newPayment);
+
       savePayments(newPayment);
       fetchPayments();
       //setPayments(updatedPayments);
@@ -77,7 +79,6 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
         setAmount('');
         setSubmitted(false);
       }, 1500);
-      //PaymentNotifierInstance.broadcastPayment(newPayment);
     };
 
   // Function to handle new WebSocket payments and update the history
