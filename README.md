@@ -73,9 +73,17 @@ For this deliverable I implemented the back end endpoints for logging in and out
 
 ## Login/database Deliverable
 For this section I implemented my mongodb database so that things were stored persistently.
-- Stores new users - done!
-- Allows registration - done!
-- Restricts activity if not registered - done!
-- Simon login deployed - done!
-- Stores budgeting and payment info - done!
+- MongoDB Atlas database created - done!
+- Stores data in MongoDB - done!
+- User registration - Creates a new account in the database.
+- Remembers existing users - done!
+- Use MongoDB to store credentials - Stores both user and their data.
+- Restricts functionality - You cannot leave the login page until logging in.
+
+## Websocket
+For this section I implemented a websocket so that changes could be shared between users.
+- Backend listens for WebSocket connection - done!
+- Frontend makes WebSocket connection - done!
+- Data sent over WebSocket connection - done!
+- WebSocket data displayed - All payments are shared between users!
 
