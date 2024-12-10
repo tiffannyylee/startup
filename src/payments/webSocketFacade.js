@@ -19,7 +19,9 @@ const BudgetEvent = {
     constructor() {
       let port = window.location.port;
       const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
-      this.socket = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
+      //this.socket = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
+      this.socket = new WebSocket(`ws://localhost:4000/ws`);
+
   
       this.socket.onopen = () => {
         console.log('WebSocket connected');

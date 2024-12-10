@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MockWebSocket } from './mockWebsocket';
+//import { MockWebSocket } from './mockWebsocket';
 import { useEffect } from 'react';
 import PaymentNotifierInstance from './webSocketFacade'; // Import the notifier
 
@@ -53,7 +53,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
         return response.json();
       })
       .then(() => {
-        console.log('Budget updated successfullyyyyy');
+        console.log('Budget updated successfully pt two');
       })
       .catch((error) => console.error('Error saving budget:', error));
 
