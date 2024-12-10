@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MockWebSocket } from './mockWebsocket';
 import { useEffect } from 'react';
-import PaymentNotifierInstance from './PaymentNotifier'; // Import the notifier
+import PaymentNotifierInstance from './webSocketFacade'; // Import the notifier
 
 
 

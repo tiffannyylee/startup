@@ -7,7 +7,11 @@ function peerProxy(httpServer) {
 
   // Handle the protocol upgrade from HTTP to WebSocket
   httpServer.on('upgrade', (request, socket, head) => {
+    console.log('Upgrade request received');
+
     wss.handleUpgrade(request, socket, head, function done(ws) {
+    console.log('WebSocket upgrade completed');
+
       wss.emit('connection', ws, request);
     });
   });
@@ -44,6 +48,10 @@ function peerProxy(httpServer) {
     ws.on('pong', () => {
       connection.alive = true;
     });
+
+    ws.on('error', (err) => {
+        console.error('WebSocket error:', err);
+      });
   });
 
   // Keep active connections alive
