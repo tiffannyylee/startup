@@ -53,7 +53,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
         return response.json();
       })
       .then(() => {
-        console.log('Budget updated successfully');
+        console.log('Budget updated successfullyyyyy');
       })
       .catch((error) => console.error('Error saving budget:', error));
 
@@ -108,7 +108,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
       })
       .then((data) => {
         setPayments(data.payments);
-        console.log('Fetched payments:', data.payments);
+        console.log('Fetched payments!!!!:', data.payments);
       })
       .catch((error) => console.error('Error fetching payments:', error));
   };
@@ -132,7 +132,7 @@ export function Payments({ total, setTotal, buckets, setBuckets, payments, setPa
           return response.json();
         })
         .then(() => {
-          console.log('Payments saved successfully');
+          console.log('Payments saved successfully woot woot woot');
         })
         .catch((error) => console.error('Error saving payments:', error));
     });
