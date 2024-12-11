@@ -79,6 +79,7 @@ For this section I implemented my mongodb database so that things were stored pe
 - Remembers existing users - done!
 - Use MongoDB to store credentials - Stores both user and their data.
 - Restricts functionality - You cannot leave the login page until logging in.
+I turned this in and then turned websocket in before this was graded. If I need to redeploy this version please let me know.
 
 ## Websocket
 For this section I implemented a websocket so that changes could be shared between users.
@@ -86,4 +87,5 @@ For this section I implemented a websocket so that changes could be shared betwe
 - Frontend makes WebSocket connection - done!
 - Data sent over WebSocket connection - done!
 - WebSocket data displayed - All payments are shared between users!
+Not sure where else to put this but I turned this in before login/database was graded.
 
